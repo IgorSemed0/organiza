@@ -29,7 +29,7 @@ export default function Create({ tipoUsers }) {
             <Head title="Create User" />
             <Card>
                 <CardHeader>
-                    <CardTitle>Create User</CardTitle>
+                    <CardTitle>Criar Utilizador</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -56,9 +56,9 @@ export default function Create({ tipoUsers }) {
                             {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
                         </div>
                         <div>
-                            <Label htmlFor="it_id_tipo_user">User Type</Label>
+                            <Label htmlFor="it_id_tipo_user">Tipo de utilizador</Label>
                             <Select
-                                value={data.it_id_tipo_user}
+                                value={data.it_id_tipo_user}    
                                 onValueChange={(value) => setData('it_id_tipo_user', value)}
                             >
                                 <SelectTrigger id="it_id_tipo_user" className={errors.it_id_tipo_user ? 'border-red-500' : ''}>

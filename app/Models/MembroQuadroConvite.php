@@ -13,6 +13,6 @@ class MembroQuadroConvite extends Model
     protected $fillable = ['it_id_quadro', 'it_id_user_convidado', 'it_id_user_convidador', 'vc_status'];
 
     public function quadro() { return $this->belongsTo(Quadro::class, 'it_id_quadro'); }
-                           public function userConvidado() { return $this->belongsTo(User::class, 'it_id_user_convidado'); }
-                           public function userConvidador() { return $this->belongsTo(User::class, 'it_id_user_convidador'); }
+    public function userConvidado() { return $this->belongsTo(User::class, 'it_id_user_convidado'); }
+    public function userConvidador() { return $this->belongsTo(User::class, 'it_id_user_convidador'); }
 }

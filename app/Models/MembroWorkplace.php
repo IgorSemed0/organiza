@@ -13,5 +13,5 @@ class MembroWorkplace extends Model
     protected $fillable = ['it_id_workplace', 'it_id_user', 'vc_funcao'];
 
     public function workplace() { return $this->belongsTo(Workplace::class, 'it_id_workplace'); }
-                       public function user() { return $this->belongsTo(User::class, 'it_id_user'); }
+    public function user() { return $this->belongsTo(User::class, 'it_id_user'); }
 }

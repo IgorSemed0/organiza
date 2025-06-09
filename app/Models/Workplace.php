@@ -13,7 +13,7 @@ class Workplace extends Model
     protected $fillable = ['vc_nome', 'vc_descricao', 'it_id_user_criador'];
 
     public function userCriador() { return $this->belongsTo(User::class, 'it_id_user_criador'); }
-                 public function quadros() { return $this->hasMany(Quadro::class, 'it_id_workplace'); }
-                 public function membros() { return $this->hasMany(MembroWorkplace::class, 'it_id_workplace'); }
-                 public function convites() { return $this->hasMany(MembroWorkplaceConvite::class, 'it_id_workplace'); }
+    public function quadros() { return $this->hasMany(Quadro::class, 'it_id_workplace'); }
+    public function membros() { return $this->hasMany(MembroWorkplace::class, 'it_id_workplace'); }
+    public function convites() { return $this->hasMany(MembroWorkplaceConvite::class, 'it_id_workplace'); }
 }

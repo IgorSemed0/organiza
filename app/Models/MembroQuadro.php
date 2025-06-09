@@ -13,5 +13,5 @@ class MembroQuadro extends Model
     protected $fillable = ['it_id_quadro', 'it_id_user', 'vc_funcao'];
 
     public function quadro() { return $this->belongsTo(Quadro::class, 'it_id_quadro'); }
-                    public function user() { return $this->belongsTo(User::class, 'it_id_user'); }
+    public function user() { return $this->belongsTo(User::class, 'it_id_user'); }
 }
