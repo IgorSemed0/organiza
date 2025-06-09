@@ -7,7 +7,8 @@ CREATE TABLE tipo_users (
     vc_nome VARCHAR(255) NOT NULL,
     vc_descricao TEXT,
     created_at TIMESTAMP NULL,
-    updated_at TIMESTAMP NULL
+    updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL
 );
 
 -- Tabela: users
@@ -19,71 +20,72 @@ CREATE TABLE users (
     it_id_tipo_user INT,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_tipo_user) REFERENCES tipo_users(id)
 );
 
 -- Laravel Default Tables Start:
-CREATE TABLE `password_reset_tokens` (
-    `email` VARCHAR(255) PRIMARY KEY,
-    `token` VARCHAR(255) NOT NULL,
-    `created_at` TIMESTAMP NULL
+CREATE TABLE password_reset_tokens (
+    email VARCHAR(255) PRIMARY KEY,
+    token VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NULL
 );
 
-CREATE TABLE `sessions` (
-    `id` VARCHAR(255) PRIMARY KEY,
-    `user_id` BIGINT UNSIGNED NULL,
-    `ip_address` VARCHAR(45) NULL,
-    `user_agent` TEXT NULL,
-    `payload` LONGTEXT NOT NULL,
-    `last_activity` INT NOT NULL,
-    INDEX `sessions_user_id_index` (`user_id`),
-    INDEX `sessions_last_activity_index` (`last_activity`)
+CREATE TABLE sessions (
+    id VARCHAR(255) PRIMARY KEY,
+    user_id BIGINT UNSIGNED NULL,
+    ip_address VARCHAR(45) NULL,
+    user_agent TEXT NULL,
+    payload LONGTEXT NOT NULL,
+    last_activity INT NOT NULL,
+    INDEX sessions_user_id_index (user_id),
+    INDEX sessions_last_activity_index (last_activity)
 );
 
-CREATE TABLE `cache` (
-    `key` VARCHAR(255) PRIMARY KEY,
-    `value` MEDIUMTEXT NOT NULL,
-    `expiration` INT NOT NULL
+CREATE TABLE cache (
+    key VARCHAR(255) PRIMARY KEY,
+    value MEDIUMTEXT NOT NULL,
+    expiration INT NOT NULL
 );
 
-CREATE TABLE `cache_locks` (
-    `key` VARCHAR(255) PRIMARY KEY,
-    `owner` VARCHAR(255) NOT NULL,
-    `expiration` INT NOT NULL
+CREATE TABLE cache_locks (
+    key VARCHAR(255) PRIMARY KEY,
+    owner VARCHAR(255) NOT NULL,
+    expiration INT NOT NULL
 );
 
-CREATE TABLE `jobs` (
-    `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `queue` VARCHAR(255) NOT NULL,
-    `payload` LONGTEXT NOT NULL,
-    `attempts` TINYINT UNSIGNED NOT NULL,
-    `reserved_at` INT UNSIGNED NULL,
-    `available_at` INT UNSIGNED NOT NULL,
-    `created_at` INT UNSIGNED NOT NULL,
-    INDEX `jobs_queue_index` (`queue`)
+CREATE TABLE jobs (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    queue VARCHAR(255) NOT NULL,
+    payload LONGTEXT NOT NULL,
+    attempts TINYINT UNSIGNED NOT NULL,
+    reserved_at INT UNSIGNED NULL,
+    available_at INT UNSIGNED NOT NULL,
+    created_at INT UNSIGNED NOT NULL,
+    INDEX jobs_queue_index (queue)
 );
 
-CREATE TABLE `job_batches` (
-    `id` VARCHAR(255) PRIMARY KEY,
-    `name` VARCHAR(255) NOT NULL,
-    `total_jobs` INT NOT NULL,
-    `pending_jobs` INT NOT NULL,
-    `failed_jobs` INT NOT NULL,
-    `failed_job_ids` LONGTEXT NOT NULL,
-    `options` MEDIUMTEXT NULL,
-    `cancelled_at` INT NULL,
-    `created_at` INT NOT NULL,
-    `finished_at` INT NULL
+CREATE TABLE job_batches (
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    total_jobs INT NOT NULL,
+    pending_jobs INT NOT NULL,
+    failed_jobs INT NOT NULL,
+    failed_job_ids LONGTEXT NOT NULL,
+    options MEDIUMTEXT NULL,
+    cancelled_at INT NULL,
+    created_at INT NOT NULL,
+    finished_at INT NULL
 );
 
-CREATE TABLE `failed_jobs` (
-    `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `uuid` VARCHAR(255) NOT NULL UNIQUE,
-    `connection` TEXT NOT NULL,
-    `queue` TEXT NOT NULL,
-    `payload` LONGTEXT NOT NULL,
-    `exception` LONGTEXT NOT NULL,
-    `failed_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE failed_jobs (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    uuid VARCHAR(255) NOT NULL UNIQUE,
+    connection TEXT NOT NULL,
+    queue TEXT NOT NULL,
+    payload LONGTEXT NOT NULL,
+    exception LONGTEXT NOT NULL,
+    failed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Laravel Default Tables End:
@@ -96,6 +98,7 @@ CREATE TABLE workplaces (
     it_id_user_criador INT,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_user_criador) REFERENCES users(id)
 );
 
@@ -109,6 +112,7 @@ CREATE TABLE quadros (
     vc_visibilidade VARCHAR(50) NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_workplace) REFERENCES workplaces(id),
     FOREIGN KEY (it_id_user_criador) REFERENCES users(id)
 );
@@ -121,6 +125,7 @@ CREATE TABLE listas (
     it_ordem INT NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_quadro) REFERENCES quadros(id)
 );
 
@@ -135,6 +140,7 @@ CREATE TABLE cartaos (
     it_ordem INT NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_lista) REFERENCES listas(id),
     FOREIGN KEY (it_id_user_criador) REFERENCES users(id)
 );
@@ -147,6 +153,7 @@ CREATE TABLE etiquetas (
     vc_cor VARCHAR(7) NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_quadro) REFERENCES quadros(id)
 );
 
@@ -159,6 +166,7 @@ CREATE TABLE anexos (
     vc_caminho_arquivo VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_cartao) REFERENCES cartaos(id),
     FOREIGN KEY (it_id_user_upload) REFERENCES users(id)
 );
@@ -166,11 +174,12 @@ CREATE TABLE anexos (
 -- Tabela: comentarios
 CREATE TABLE comentarios (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    it_id_cartao INT,
+    it_id_cart treatAs:cartao INT,
     it_id_user_autor INT,
     vc_texto TEXT NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_cartao) REFERENCES cartaos(id),
     FOREIGN KEY (it_id_user_autor) REFERENCES users(id)
 );
@@ -183,6 +192,7 @@ CREATE TABLE membro_quadros (
     vc_funcao VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_quadro) REFERENCES quadros(id),
     FOREIGN KEY (it_id_user) REFERENCES users(id)
 );
@@ -194,6 +204,7 @@ CREATE TABLE cartao_etiquetas (
     it_id_etiqueta INT,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_cartao) REFERENCES cartaos(id),
     FOREIGN KEY (it_id_etiqueta) REFERENCES etiquetas(id)
 );
@@ -206,6 +217,7 @@ CREATE TABLE chat_mensagems (
     vc_texto_mensagem TEXT NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_quadro) REFERENCES quadros(id),
     FOREIGN KEY (it_id_user_autor) REFERENCES users(id)
 );
@@ -219,6 +231,7 @@ CREATE TABLE chat_anexos (
     vc_caminho_arquivo VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_chat_mensagem) REFERENCES chat_mensagems(id),
     FOREIGN KEY (it_id_user_upload) REFERENCES users(id)
 );
@@ -230,6 +243,7 @@ CREATE TABLE membro_cartaos (
     it_id_user INT,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_cartao) REFERENCES cartaos(id),
     FOREIGN KEY (it_id_user) REFERENCES users(id)
 );
@@ -241,6 +255,7 @@ CREATE TABLE listas_verificacaos (
     vc_nome VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_cartao) REFERENCES cartaos(id)
 );
 
@@ -252,6 +267,7 @@ CREATE TABLE itens_lista_verificacaos (
     bt_completo BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_lista_verificacao) REFERENCES listas_verificacaos(id)
 );
 
@@ -263,6 +279,7 @@ CREATE TABLE membro_workplaces (
     vc_funcao VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_workplace) REFERENCES workplaces(id),
     FOREIGN KEY (it_id_user) REFERENCES users(id)
 );
@@ -276,7 +293,7 @@ CREATE TABLE membro_quadro_convites (
     vc_status VARCHAR(50) NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
-    dt_data_expiracao DATETIME,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_quadro) REFERENCES quadros(id),
     FOREIGN KEY (it_id_user_convidado) REFERENCES users(id),
     FOREIGN KEY (it_id_user_convidador) REFERENCES users(id)
@@ -291,7 +308,7 @@ CREATE TABLE membro_workplace_convites (
     vc_status VARCHAR(50) NOT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL,
-    dt_data_expiracao DATETIME,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (it_id_workplace) REFERENCES workplaces(id),
     FOREIGN KEY (it_id_user_convidado) REFERENCES users(id),
     FOREIGN KEY (it_id_user_convidador) REFERENCES users(id)
@@ -304,13 +321,13 @@ INSERT INTO tipo_users (vc_nome, vc_descricao) VALUES
 
 -- Inserções para users
 INSERT INTO users (vc_nome, email, password, it_id_tipo_user) VALUES
-('Administrador', 'admin@email.com', '$2y$10$J9QzT4Y2J5zX2X2Y2X2Y2u0f3Z3X3X3X3X3X3X3X3X3X3X3X3X3', 1),
-('Silvia Clara', 'clara@email.com', '$2y$10$J9QzT4Y2J5zX2X2Y2X2Y2u0f3Z3X3X3X3X3X3X3X3X3X3X3X3X3', 1),
-('Januário dos Santos', 'bruno.costa@email.com', '$2y$10$J9QzT4Y2J5zX2X2Y2X2Y2u0f3Z3X3X3X3X3X3X3X3X3X3X3X3X3', 2),
-('Dário Budjurra', 'budjurra@email.com', '$2y$10$J9QzT4Y2J5zX2X2Y2X2Y2u0f3Z3X3X3X3X3X3X3X3X3X3X3X3X3', 1),
-('Isidro de Oliveira', 'isidro@email.com', '$2y$10$J9QzT4Y2J5zX2X2Y2X2Y2u0f3Z3X3X3X3X3X3X3X3X3X3X3X3X3', 2),
-('Eva Pereira', 'eva@email.com', '$2y$10$J9QzT4Y2J5zX2X2Y2X2Y2u0f3Z3X3X3X3X3X3X3X3X3X3X3X3X3', 1),
-('Horácio Manuel', 'horacio@email.com', '$2y$10$J9QzT4Y2J5zX2X2Y2X2Y2u0f3Z3X3X3X3X3X3X3X3X3X3X3X3X3', 2);
+('Administrador', 'admin@email.com', '12345678', 1),
+('Silvia Clara', 'clara@email.com', 'senha123', 1),
+('Januário dos Santos', 'bruno.costa@email.com', 'abc123', 2),
+('Dário Budjurra', 'budjurra@email.com', 'xyz123', 1),
+('Isidro de Oliveira', 'isidro@email.com', 'pass2025', 2),
+('Eva Pereira', 'eva@email.com', 'eva321', 1),
+('Horácio Manuel', 'horacio@email.com', '12345678', 2);
 
 -- Inserções para workplaces
 INSERT INTO workplaces (vc_nome, vc_descricao, it_id_user_criador) VALUES
@@ -448,19 +465,19 @@ INSERT INTO membro_workplaces (it_id_workplace, it_id_user, vc_funcao) VALUES
 (6, 6, 'Membro');
 
 -- Inserções para membro_quadro_convites
-INSERT INTO membro_quadro_convites (it_id_quadro, it_id_user_convidado, it_id_user_convidador, vc_status, dt_data_expiracao) VALUES
-(1, 2, 1, 'aceite', '2025-02-08 09:00:00'),
-(2, 3, 2, 'pendente', '2025-02-08 12:00:00'),
-(3, 4, 3, 'recusado', '2025-02-08 10:30:00'),
-(4, 5, 4, 'aceite', '2025-02-08 15:00:00'),
-(5, 6, 5, 'pendente', '2025-02-08 11:00:00'),
-(6, 1, 6, 'aceite', '2025-02-08 13:00:00');
+INSERT INTO membro_quadro_convites (it_id_quadro, it_id_user_convidado, it_id_user_convidador, vc_status) VALUES
+(1, 2, 1, 'aceite'),
+(2, 3, 2, 'pendente'),
+(3, 4, 3, 'recusado'),
+(4, 5, 4, 'aceite'),
+(5, 6, 5, 'pendente'),
+(6, 1, 6, 'aceite');
 
 -- Inserções para membro_workplace_convites
-INSERT INTO membro_workplace_convites (it_id_workplace, it_id_user_convidado, it_id_user_convidador, vc_status, dt_data_expiracao) VALUES
-(1, 3, 1, 'aceite', '2025-02-09 09:00:00'),
-(2, 4, 2, 'pendente', '2025-02-09 12:00:00'),
-(3, 5, 3, 'recusado', '2025-02-09 10:30:00'),
-(4, 6, 4, 'aceite', '2025-02-09 15:00:00'),
-(5, 1, 5, 'pendente', '2025-02-09 11:00:00'),
-(6, 2, 6, 'aceite', '2025-02-09 13:00:00');
+INSERT INTO membro_workplace_convites (it_id_workplace, it_id_user_convidado, it_id_user_convidador, vc_status) VALUES
+(1, 3, 1, 'aceite'),
+(2, 4, 2, 'pendente'),
+(3, 5, 3, 'recusado'),
+(4, 6, 4, 'aceite'),
+(5, 1, 5, 'pendente'),
+(6, 2, 6, 'aceite');
