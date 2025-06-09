@@ -17,9 +17,10 @@ export interface NavGroup {
 
 export interface NavItem {
     title: string;
-    href: string;
+    href?: string;
     icon?: LucideIcon | null;
     isActive?: boolean;
+    items?: NavItem[]; 
 }
 
 export interface SharedData {
@@ -34,6 +35,7 @@ export interface SharedData {
 export interface User {
     id: number;
     vc_nome: string;
+    it_id_tipo_user: string;
     email: string;
     avatar?: string;
     email_verified_at: string | null;
