@@ -1,3 +1,4 @@
+drop database organiza;
 CREATE DATABASE organiza;
 USE organiza;
 
@@ -25,69 +26,68 @@ CREATE TABLE users (
 );
 
 -- Laravel Default Tables Start:
-CREATE TABLE password_reset_tokens (
-    email VARCHAR(255) PRIMARY KEY,
-    token VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP NULL
+CREATE TABLE `password_reset_tokens` (
+    `email` VARCHAR(255) PRIMARY KEY,
+    `token` VARCHAR(255) NOT NULL,
+    `created_at` TIMESTAMP NULL
 );
 
-CREATE TABLE sessions (
-    id VARCHAR(255) PRIMARY KEY,
-    user_id BIGINT UNSIGNED NULL,
-    ip_address VARCHAR(45) NULL,
-    user_agent TEXT NULL,
-    payload LONGTEXT NOT NULL,
-    last_activity INT NOT NULL,
-    INDEX sessions_user_id_index (user_id),
-    INDEX sessions_last_activity_index (last_activity)
+CREATE TABLE `sessions` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `user_id` BIGINT UNSIGNED NULL,
+    `ip_address` VARCHAR(45) NULL,
+    `user_agent` TEXT NULL,
+    `payload` LONGTEXT NOT NULL,
+    `last_activity` INT NOT NULL,
+    INDEX `sessions_user_id_index` (`user_id`),
+    INDEX `sessions_last_activity_index` (`last_activity`)
 );
 
-CREATE TABLE cache (
-    key VARCHAR(255) PRIMARY KEY,
-    value MEDIUMTEXT NOT NULL,
-    expiration INT NOT NULL
+CREATE TABLE `cache` (
+    `key` VARCHAR(255) PRIMARY KEY,
+    `value` MEDIUMTEXT NOT NULL,
+    `expiration` INT NOT NULL
 );
 
-CREATE TABLE cache_locks (
-    key VARCHAR(255) PRIMARY KEY,
-    owner VARCHAR(255) NOT NULL,
-    expiration INT NOT NULL
+CREATE TABLE `cache_locks` (
+    `key` VARCHAR(255) PRIMARY KEY,
+    `owner` VARCHAR(255) NOT NULL,
+    `expiration` INT NOT NULL
 );
 
-CREATE TABLE jobs (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    queue VARCHAR(255) NOT NULL,
-    payload LONGTEXT NOT NULL,
-    attempts TINYINT UNSIGNED NOT NULL,
-    reserved_at INT UNSIGNED NULL,
-    available_at INT UNSIGNED NOT NULL,
-    created_at INT UNSIGNED NOT NULL,
-    INDEX jobs_queue_index (queue)
+CREATE TABLE `jobs` (
+    `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `queue` VARCHAR(255) NOT NULL,
+    `payload` LONGTEXT NOT NULL,
+    `attempts` TINYINT UNSIGNED NOT NULL,
+    `reserved_at` INT UNSIGNED NULL,
+    `available_at` INT UNSIGNED NOT NULL,
+    `created_at` INT UNSIGNED NOT NULL,
+    INDEX `jobs_queue_index` (`queue`)
 );
 
-CREATE TABLE job_batches (
-    id VARCHAR(255) PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    total_jobs INT NOT NULL,
-    pending_jobs INT NOT NULL,
-    failed_jobs INT NOT NULL,
-    failed_job_ids LONGTEXT NOT NULL,
-    options MEDIUMTEXT NULL,
-    cancelled_at INT NULL,
-    created_at INT NOT NULL,
-    finished_at INT NULL
+CREATE TABLE `job_batches` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `total_jobs` INT NOT NULL,
+    `pending_jobs` INT NOT NULL,
+    `failed_jobs` INT NOT NULL,
+    `failed_job_ids` LONGTEXT NOT NULL,
+    `options` MEDIUMTEXT NULL,
+    `cancelled_at` INT NULL,
+    `created_at` INT NOT NULL,
+    `finished_at` INT NULL
 );
 
-CREATE TABLE failed_jobs (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    uuid VARCHAR(255) NOT NULL UNIQUE,
-    connection TEXT NOT NULL,
-    queue TEXT NOT NULL,
-    payload LONGTEXT NOT NULL,
-    exception LONGTEXT NOT NULL,
-    failed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE `failed_jobs` (
+    `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `uuid` VARCHAR(255) NOT NULL UNIQUE,
+    `connection` TEXT NOT NULL,
+    `queue` TEXT NOT NULL,
+    `payload` LONGTEXT NOT NULL,
+    `exception` LONGTEXT NOT NULL,
+    `failed_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
 -- Laravel Default Tables End:
 
 -- Tabela: workplaces
@@ -174,7 +174,7 @@ CREATE TABLE anexos (
 -- Tabela: comentarios
 CREATE TABLE comentarios (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    it_id_cart treatAs:cartao INT,
+    it_id_cartao INT,
     it_id_user_autor INT,
     vc_texto TEXT NOT NULL,
     created_at TIMESTAMP NULL,
@@ -321,13 +321,13 @@ INSERT INTO tipo_users (vc_nome, vc_descricao) VALUES
 
 -- Inserções para users
 INSERT INTO users (vc_nome, email, password, it_id_tipo_user) VALUES
-('Administrador', 'admin@email.com', '12345678', 1),
-('Silvia Clara', 'clara@email.com', 'senha123', 1),
-('Januário dos Santos', 'bruno.costa@email.com', 'abc123', 2),
-('Dário Budjurra', 'budjurra@email.com', 'xyz123', 1),
-('Isidro de Oliveira', 'isidro@email.com', 'pass2025', 2),
-('Eva Pereira', 'eva@email.com', 'eva321', 1),
-('Horácio Manuel', 'horacio@email.com', '12345678', 2);
+('Administrador', 'admin@email.com', '$2y$12$QBPtRH9DrUtz/6i3gRS9VOijOAKDM/FYJ6Dldb6wbN.ITYg3cPMLC', 1),
+('Silvia Clara', 'clara@email.com', '$2y$12$QBPtRH9DrUtz/6i3gRS9VOijOAKDM/FYJ6Dldb6wbN.ITYg3cPMLC', 2),
+('Januário dos Santos', 'bruno.costa@email.com', '$2y$12$QBPtRH9DrUtz/6i3gRS9VOijOAKDM/FYJ6Dldb6wbN.ITYg3cPMLC', 2),
+('Dário Budjurra', 'budjurra@email.com', '$2y$12$QBPtRH9DrUtz/6i3gRS9VOijOAKDM/FYJ6Dldb6wbN.ITYg3cPMLC', 2),
+('Isidro de Oliveira', 'isidro@email.com', '$2y$12$QBPtRH9DrUtz/6i3gRS9VOijOAKDM/FYJ6Dldb6wbN.ITYg3cPMLC', 2),
+('Eva Pereira', 'eva@email.com', '$2y$12$QBPtRH9DrUtz/6i3gRS9VOijOAKDM/FYJ6Dldb6wbN.ITYg3cPMLC', 2),
+('Horácio Manuel', 'horacio@email.com', '$2y$12$QBPtRH9DrUtz/6i3gRS9VOijOAKDM/FYJ6Dldb6wbN.ITYg3cPMLC', 2);
 
 -- Inserções para workplaces
 INSERT INTO workplaces (vc_nome, vc_descricao, it_id_user_criador) VALUES
