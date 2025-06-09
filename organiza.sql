@@ -225,7 +225,7 @@ CREATE TABLE listas_verificacaos (
     FOREIGN KEY (it_id_cartao) REFERENCES cartaos(id)
 );
 
--- Tabela: itens_lista_verificacoes
+-- Tabela: itentipo_userss_lista_verificacoes
 CREATE TABLE itens_lista_verificacaos (
     id INT PRIMARY KEY AUTO_INCREMENT,
     it_id_lista_verificacao INT,
@@ -280,7 +280,7 @@ CREATE TABLE membro_workplace_convites (
 -- Inserções para tipo_users
 INSERT INTO tipo_users (vc_nome, vc_descricao) VALUES
 ('Administrador', 'Utilizador com permissões completas'),
-('User', 'Utilizador com permissões básicas'),
+('User', 'Utilizador com permissões básicas');
 
 
 -- Inserções para users
