@@ -9,507 +9,254 @@ if [ ! -f "artisan" ]; then
   exit 1
 fi
 
-# Array of model names and their table names
-declare -A models=(
-  ["TipoUser"]="tipo_users"
-  ["User"]="users"
-  ["Workplace"]="workplaces"
-  ["Quadro"]="quadros"
-  ["Lista"]="listas"
-  ["Cartao"]="cartaos"
-  ["Etiqueta"]="etiquetas"
-  ["Anexo"]="anexos"
-  ["Comentario"]="comentarios"
-  ["MembroQuadro"]="membro_quadros"
-  ["CartaoEtiqueta"]="cartao_etiquetas"
-  ["ChatMensagem"]="chat_mensagems"
-  ["ChatAnexo"]="chat_anexos"
-  ["MembroCartao"]="membro_cartaos"
-  ["ListaVerificacao"]="listas_verificacaos"
-  ["ItemListaVerificacao"]="itens_lista_verificacaos"
-  ["MembroWorkplace"]="membro_workplaces"
-  ["MembroQuadroConvite"]="membro_quadro_convites"
-  ["MembroWorkplaceConvite"]="membro_workplace_convites"
+# Ensure database/seeders directory exists
+mkdir -p database/seeders
+
+# Array of table names and corresponding model names
+declare -A tables=(
+  ["tipo_users"]="TipoUser"
+  ["users"]="User"
+  ["workplaces"]="Workplace"
+  ["quadros"]="Quadro"
+  ["listas"]="Lista"
+  ["cartaos"]="Cartao"
+  ["etiquetas"]="Etiqueta"
+  ["anexos"]="Anexo"
+  ["comentarios"]="Comentario"
+  ["membro_quadros"]="MembroQuadro"
+  ["cartao_etiquetas"]="CartaoEtiqueta"
+  ["chat_mensagems"]="ChatMensagem"
+  ["chat_anexos"]="ChatAnexo"
+  ["membro_cartaos"]="MembroCartao"
+  ["listas_verificacaos"]="ListaVerificacao"
+  ["itens_lista_verificacaos"]="ItemListaVerificacao"
+  ["membro_workplaces"]="MembroWorkplace"
+  ["membro_quadro_convites"]="MembroQuadroConvite"
+  ["membro_workplace_convites"]="MembroWorkplaceConvite"
 )
 
-# Generate models with fillable and relationships
-for model in "${!models[@]}"; do
-  table=${models[$model]}
-  php artisan make:model "$model" -m
-  model_file="app/Models/$model.php"
-  
-  # Define fillable and relationships based on table
-  case $model in
-    "TipoUser")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class TipoUser extends Model
-{
-    protected \$table = 'tipo_users';
-    protected \$fillable = ['vc_nome', 'vc_descricao'];
-    public function users()
-    {
-        return \$this->hasMany(User::class, 'it_id_tipo_user');
-    }
-}
-"
-      ;;
-    "User")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class User extends Model
-{
-    protected \$table = 'users';
-    protected \$fillable = ['vc_nome', 'vc_email', 'vc_senha', 'dt_data_registro', 'it_id_tipo_user'];
-    public function tipoUser()
-    {
-        return \$this->belongsTo(TipoUser::class, 'it_id_tipo_user');
-    }
-    public function workplaces()
-    {
-        return \$this->hasMany(Workplace::class, 'it_id_user_criador');
-    }
-    public function quadros()
-    {
-        return \$this->hasMany(Quadro::class, 'it_id_user_criador');
-    }
-    public function cartaos()
-    {
-        return \$this->hasMany(Cartao::class, 'it_id_user_criador');
-    }
-    public function anexos()
-    {
-        return \$this->hasMany(Anexo::class, 'it_id_user_upload');
-    }
-    public function comentarios()
-    {
-        return \$this->hasMany(Comentario::class, 'it_id_user_autor');
-    }
-    public function membroQuadros()
-    {
-        return \$this->hasMany(MembroQuadro::class, 'it_id_user');
-    }
-    public function chatMensagens()
-    {
-        return \$this->hasMany(ChatMensagem::class, 'it_id_user_autor');
-    }
-    public function chatAnexos()
-    {
-        return \$this->hasMany(ChatAnexo::class, 'it_id_user_upload');
-    }
-    public function membroCartaos()
-    {
-        return \$this->hasMany(MembroCartao::class, 'it_id_user');
-    }
-    public function membroWorkplaces()
-    {
-        return \$this->hasMany(MembroWorkplace::class, 'it_id_user');
-    }
-    public function membroQuadroConvitesConvidado()
-    {
-        return \$this->hasMany(MembroQuadroConvite::class, 'it_id_user_convidado');
-    }
-    public function membroQuadroConvitesConvidador()
-    {
-        return \$this->hasMany(MembroQuadroConvite::class, 'it_id_user_convidador');
-    }
-    public function membroWorkplaceConvitesConvidado()
-    {
-        return \$this->hasMany(MembroWorkplaceConvite::class, 'it_id_user_convidado');
-    }
-    public function membroWorkplaceConvitesConvidador()
-    {
-        return \$this->hasMany(MembroWorkplaceConvite::class, 'it_id_user_convidador');
-    }
-}
-"
-      ;;
-    "Workplace")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class Workplace extends Model
-{
-    protected \$table = 'workplaces';
-    protected \$fillable = ['vc_nome', 'vc_descricao', 'dt_data_criacao', 'it_id_user_criador'];
-    public function userCriador()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user_criador');
-    }
-    public function quadros()
-    {
-        return \$this->hasMany(Quadro::class, 'it_id_workplace');
-    }
-    public function membroWorkplaces()
-    {
-        return \$this->hasMany(MembroWorkplace::class, 'it_id_workplace');
-    }
-    public function membroWorkplaceConvites()
-    {
-        return \$this->hasMany(MembroWorkplaceConvite::class, 'it_id_workplace');
-    }
-}
-"
-      ;;
-    "Quadro")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class Quadro extends Model
-{
-    protected \$table = 'quadros';
-    protected \$fillable = ['it_id_workplace', 'it_id_user_criador', 'vc_nome', 'vc_descricao', 'dt_data_criacao', 'vc_visibilidade'];
-    public function workplace()
-    {
-        return \$this->belongsTo(Workplace::class, 'it_id_workplace');
-    }
-    public function userCriador()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user_criador');
-    }
-    public function listas()
-    {
-        return \$this->hasMany(Lista::class, 'it_id_quadro');
-    }
-    public function etiquetas()
-    {
-        return \$this->hasMany(Etiqueta::class, 'it_id_quadro');
-    }
-    public function membroQuadros()
-    {
-        return \$this->hasMany(MembroQuadro::class, 'it_id_quadro');
-    }
-    public function chatMensagens()
-    {
-        return \$this->hasMany(ChatMensagem::class, 'it_id_quadro');
-    }
-    public function membroQuadroConvites()
-    {
-        return \$this->hasMany(MembroQuadroConvite::class, 'it_id_quadro');
-    }
-}
-"
-      ;;
-    "Lista")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class Lista extends Model
-{
-    protected \$table = 'listas';
-    protected \$fillable = ['it_id_quadro', 'vc_nome', 'it_ordem'];
-    public function quadro()
-    {
-        return \$this->belongsTo(Quadro::class, 'it_id_quadro');
-    }
-    public function cartaos()
-    {
-        return \$this->hasMany(Cartao::class, 'it_id_lista');
-    }
-}
-"
-      ;;
-    "Cartao")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class Cartao extends Model
-{
-    protected \$table = 'cartaos';
-    protected \$fillable = ['it_id_lista', 'it_id_user_criador', 'vc_titulo', 'vc_descricao', 'dt_data_criacao', 'dt_data_vencimento', 'it_ordem'];
-    public function lista()
-    {
-        return \$this->belongsTo(Lista::class, 'it_id_lista');
-    }
-    public function userCriador()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user_criador');
-    }
-    public function anexos()
-    {
-        return \$this->hasMany(Anexo::class, 'it_id_cartao');
-    }
-    public function comentarios()
-    {
-        return \$this->hasMany(Comentario::class, 'it_id_cartao');
-    }
-    public function cartaoEtiquetas()
-    {
-        return \$this->hasMany(CartaoEtiqueta::class, 'it_id_cartao');
-    }
-    public function membroCartaos()
-    {
-        return \$this->hasMany(MembroCartao::class, 'it_id_cartao');
-    }
-    public function listasVerificacaos()
-    {
-        return \$this->hasMany(ListaVerificacao::class, 'it_id_cartao');
-    }
-}
-"
-      ;;
-    "Etiqueta")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class Etiqueta extends Model
-{
-    protected \$table = 'etiquetas';
-    protected \$fillable = ['it_id_quadro', 'vc_nome', 'vc_cor'];
-    public function quadro()
-    {
-        return \$this->belongsTo(Quadro::class, 'it_id_quadro');
-    }
-    public function cartaoEtiquetas()
-    {
-        return \$this->hasMany(CartaoEtiqueta::class, 'it_id_etiqueta');
-    }
-}
-"
-      ;;
-    "Anexo")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class Anexo extends Model
-{
-    protected \$table = 'anexos';
-    protected \$fillable = ['it_id_cartao', 'it_id_user_upload', 'vc_nome_arquivo', 'vc_caminho_arquivo', 'dt_data_upload'];
-    public function cartao()
-    {
-        return \$this->belongsTo(Cartao::class, 'it_id_cartao');
-    }
-    public function userUpload()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user_upload');
-    }
-}
-"
-      ;;
-    "Comentario")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class Comentario extends Model
-{
-    protected \$table = 'comentarios';
-    protected \$fillable = ['it_id_cartao', 'it_id_user_autor', 'vc_texto', 'dt_data_criacao'];
-    public function cartao()
-    {
-        return \$this->belongsTo(Cartao::class, 'it_id_cartao');
-    }
-    public function userAutor()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user_autor');
-    }
-}
-"
-      ;;
-    "MembroQuadro")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class MembroQuadro extends Model
-{
-    protected \$table = 'membro_quadros';
-    protected \$fillable = ['it_id_quadro', 'it_id_user', 'vc_funcao'];
-    public function quadro()
-    {
-        return \$this->belongsTo(Quadro::class, 'it_id_quadro');
-    }
-    public function user()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user');
-    }
-}
-"
-      ;;
-    "CartaoEtiqueta")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class CartaoEtiqueta extends Model
-{
-    protected \$table = 'cartao_etiquetas';
-    protected \$fillable = ['it_id_cartao', 'it_id_etiqueta'];
-    public function cartao()
-    {
-        return \$this->belongsTo(Cartao::class, 'it_id_cartao');
-    }
-    public function etiqueta()
-    {
-        return \$this->belongsTo(Etiqueta::class, 'it_id_etiqueta');
-    }
-}
-"
-      ;;
-    "ChatMensagem")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class ChatMensagem extends Model
-{
-    protected \$table = 'chat_mensagems';
-    protected \$fillable = ['it_id_quadro', 'it_id_user_autor', 'vc_texto_mensagem', 'dt_data_envio'];
-    public function quadro()
-    {
-        return \$this->belongsTo(Quadro::class, 'it_id_quadro');
-    }
-    public function userAutor()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user_autor');
-    }
-    public function chatAnexos()
-    {
-        return \$this->hasMany(ChatAnexo::class, 'it_id_chat_mensagem');
-    }
-}
-"
-      ;;
-    "ChatAnexo")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class ChatAnexo extends Model
-{
-    protected \$table = 'chat_anexos';
-    protected \$fillable = ['it_id_chat_mensagem', 'it_id_user_upload', 'vc_nome_arquivo', 'vc_caminho_arquivo', 'dt_data_upload'];
-    public function chatMensagem()
-    {
-        return \$this->belongsTo(ChatMensagem::class, 'it_id_chat_mensagem');
-    }
-    public function userUpload()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user_upload');
-    }
-}
-"
-      ;;
-    "MembroCartao")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class MembroCartao extends Model
-{
-    protected \$table = 'membro_cartaos';
-    protected \$fillable = ['it_id_cartao', 'it_id_user'];
-    public function cartao()
-    {
-        return \$this->belongsTo(Cartao::class, 'it_id_cartao');
-    }
-    public function user()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user');
-    }
-}
-"
-      ;;
-    "ListaVerificacao")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class ListaVerificacao extends Model
-{
-    protected \$table = 'listas_verificacaos';
-    protected \$fillable = ['it_id_cartao', 'vc_nome'];
-    public function cartao()
-    {
-        return \$this->belongsTo(Cartao::class, 'it_id_cartao');
-    }
-    public function itens()
-    {
-        return \$this->hasMany(ItemListaVerificacao::class, 'it_id_lista_verificacao');
-    }
-}
-"
-      ;;
-    "ItemListaVerificacao")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class ItemListaVerificacao extends Model
-{
-    protected \$table = 'itens_lista_verificacaos';
-    protected \$fillable = ['it_id_lista_verificacao', 'vc_texto', 'bt_completo'];
-    public function listaVerificacao()
-    {
-        return \$this->belongsTo(ListaVerificacao::class, 'it_id_lista_verificacao');
-    }
-}
-"
-      ;;
-    "MembroWorkplace")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class MembroWorkplace extends Model
-{
-    protected \$table = 'membro_workplaces';
-    protected \$fillable = ['it_id_workplace', 'it_id_user', 'vc_funcao'];
-    public function workplace()
-    {
-        return \$this->belongsTo(Workplace::class, 'it_id_workplace');
-    }
-    public function user()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user');
-    }
-}
-"
-      ;;
-    "MembroQuadroConvite")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class MembroQuadroConvite extends Model
-{
-    protected \$table = 'membro_quadro_convites';
-    protected \$fillable = ['it_id_quadro', 'it_id_user_convidado', 'it_id_user_convidador', 'vc_status', 'dt_data_envio', 'dt_data_expiracao'];
-    public function quadro()
-    {
-        return \$this->belongsTo(Quadro::class, 'it_id_quadro');
-    }
-    public function userConvidado()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user_convidado');
-    }
-    public function userConvidador()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user_convidador');
-    }
-}
-"
-      ;;
-    "MembroWorkplaceConvite")
-      content="<?php
-namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-class MembroWorkplaceConvite extends Model
-{
-    protected \$table = 'membro_workplace_convites';
-    protected \$fillable = ['it_id_workplace', 'it_id_user_convidado', 'it_id_user_convidador', 'vc_status', 'dt_data_envio', 'dt_data_expiracao'];
-    public function workplace()
-    {
-        return \$this->belongsTo(Workplace::class, 'it_id_workplace');
-    }
-    public function userConvidado()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user_convidado');
-    }
-    public function userConvidador()
-    {
-        return \$this->belongsTo(User::class, 'it_id_user_convidador');
-    }
-}
-"
-      ;;
-  esac
+# Data for each table (updated to exclude removed timestamp fields)
+declare -A inserts=(
+  ["tipo_users"]="[
+    ['vc_nome' => 'Administrador', 'vc_descricao' => 'Utilizador com permissões completas'],
+    ['vc_nome' => 'User', 'vc_descricao' => 'Utilizador com permissões básicas']
+  ]"
+  ["users"]="[
+    ['vc_nome' => 'Administrador', 'email' => 'admin@email.com', 'password' => '12345678', 'it_id_tipo_user' => 1],
+    ['vc_nome' => 'Silvia Clara', 'email' => 'clara@email.com', 'password' => 'senha123', 'it_id_tipo_user' => 1],
+    ['vc_nome' => 'Januário dos Santos', 'email' => 'bruno.costa@email.com', 'password' => 'abc123', 'it_id_tipo_user' => 2],
+    ['vc_nome' => 'Dário Budjurra', 'email' => 'budjurra@email.com', 'password' => 'xyz123', 'it_id_tipo_user' => 1],
+    ['vc_nome' => 'Isidro de Oliveira', 'email' => 'isidro@email.com', 'password' => 'pass2025', 'it_id_tipo_user' => 2],
+    ['vc_nome' => 'Eva Pereira', 'email' => 'eva@email.com', 'password' => 'eva321', 'it_id_tipo_user' => 1],
+    ['vc_nome' => 'Horácio Manuel', 'email' => 'horacio@email.com', 'password' => '12345678', 'it_id_tipo_user' => 2]
+  ]"
+  ["workplaces"]="[
+    ['vc_nome' => 'Equipa Marketing', 'vc_descricao' => 'Espaço para campanhas de marketing', 'it_id_user_criador' => 1],
+    ['vc_nome' => 'Projecto TI', 'vc_descricao' => 'Gestão de desenvolvimento de software', 'it_id_user_criador' => 2],
+    ['vc_nome' => 'Plano Académico', 'vc_descricao' => 'Organização de tarefas escolares', 'it_id_user_criador' => 3],
+    ['vc_nome' => 'Evento Corporativo', 'vc_descricao' => 'Planeamento de eventos', 'it_id_user_criador' => 4],
+    ['vc_nome' => 'Design Gráfico', 'vc_descricao' => 'Projetos de design e branding', 'it_id_user_criador' => 5],
+    ['vc_nome' => 'Gestão Financeira', 'vc_descricao' => 'Controlo de orçamentos', 'it_id_user_criador' => 6]
+  ]"
+  ["quadros"]="[
+    ['it_id_workplace' => 1, 'it_id_user_criador' => 1, 'vc_nome' => 'Campanha Janeiro', 'vc_descricao' => 'Planeamento da campanha de início de ano', 'vc_visibilidade' => 'privado'],
+    ['it_id_workplace' => 1, 'it_id_user_criador' => 2, 'vc_nome' => 'Redes Sociais', 'vc_descricao' => 'Gestão de posts e conteúdos', 'vc_visibilidade' => 'público'],
+    ['it_id_workplace' => 2, 'it_id_user_criador' => 3, 'vc_nome' => 'Desenvolvimento App', 'vc_descricao' => 'Tarefas do novo aplicativo', 'vc_visibilidade' => 'privado'],
+    ['it_id_workplace' => 3, 'it_id_user_criador' => 4, 'vc_nome' => 'Trabalhos Escolares', 'vc_descricao' => 'Organização de entregas', 'vc_visibilidade' => 'público'],
+    ['it_id_workplace' => 4, 'it_id_user_criador' => 5, 'vc_nome' => 'Evento Anual', 'vc_descricao' => 'Planeamento logístico', 'vc_visibilidade' => 'privado'],
+    ['it_id_workplace' => 5, 'it_id_user_criador' => 6, 'vc_nome' => 'Logotipo Novo', 'vc_descricao' => 'Criação de identidade visual', 'vc_visibilidade' => 'público']
+  ]"
+  ["listas"]="[
+    ['it_id_quadro' => 1, 'vc_nome' => 'A Fazer', 'it_ordem' => 1],
+    ['it_id_quadro' => 1, 'vc_nome' => 'Em Progresso', 'it_ordem' => 2],
+    ['it_id_quadro' => 2, 'vc_nome' => 'Ideias', 'it_ordem' => 1],
+    ['it_id_quadro' => 3, 'vc_nome' => 'Backlog', 'it_ordem' => 1],
+    ['it_id_quadro' => 4, 'vc_nome' => 'Pendentes', 'it_ordem' => 1],
+    ['it_id_quadro' => 5, 'vc_nome' => 'Concluídos', 'it_ordem' => 1]
+  ]"
+  ["cartaos"]="[
+    ['it_id_lista' => 1, 'it_id_user_criador' => 1, 'vc_titulo' => 'Criar Banner', 'vc_descricao' => 'Banner para campanha de Janeiro', 'dt_data_vencimento' => '2025-01-30', 'it_ordem' => 1],
+    ['it_id_lista' => 2, 'it_id_user_criador' => 2, 'vc_titulo' => 'Reunião Equipa', 'vc_descricao' => 'Discutir progresso', 'dt_data_vencimento' => '2025-01-25', 'it_ordem' => 1],
+    ['it_id_lista' => 3, 'it_id_user_criador' => 3, 'vc_titulo' => 'Post Instagram', 'vc_descricao' => 'Publicar teaser da campanha', 'dt_data_vencimento' => null, 'it_ordem' => 1],
+    ['it_id_lista' => 4, 'it_id_user_criador' => 4, 'vc_titulo' => 'Corrigir Bugs', 'vc_descricao' => 'Resolver erros no app', 'dt_data_vencimento' => '2025-02-01', 'it_ordem' => 1],
+    ['it_id_lista' => 5, 'it_id_user_criador' => 5, 'vc_titulo' => 'Planeamento Catering', 'vc_descricao' => 'Definir menu do evento', 'dt_data_vencimento' => '2025-02-05', 'it_ordem' => 1],
+    ['it_id_lista' => 6, 'it_id_user_criador' => 6, 'vc_titulo' => 'Aprovar Design', 'vc_descricao' => 'Revisão final do logotipo', 'dt_data_vencimento' => '2025-01-31', 'it_ordem' => 1]
+  ]"
+  ["etiquetas"]="[
+    ['it_id_quadro' => 1, 'vc_nome' => 'Urgente', 'vc_cor' => '#FF0000'],
+    ['it_id_quadro' => 2, 'vc_nome' => 'Social Media', 'vc_cor' => '#00FF00'],
+    ['it_id_quadro' => 3, 'vc_nome' => 'Prioridade Alta', 'vc_cor' => '#FF4500'],
+    ['it_id_quadro' => 4, 'vc_nome' => 'Baixa Prioridade', 'vc_cor' => '#87CEEB'],
+    ['it_id_quadro' => 5, 'vc_nome' => 'Logística', 'vc_cor' => '#FFD700'],
+    ['it_id_quadro' => 6, 'vc_nome' => 'Design', 'vc_cor' => '#800080']
+  ]"
+  ["anexos"]="[
+    ['it_id_cartao' => 1, 'it_id_user_upload' => 1, 'vc_nome_arquivo' => 'banner_draft.jpg', 'vc_caminho_arquivo' => '/uploads/banner_draft.jpg'],
+    ['it_id_cartao' => 2, 'it_id_user_upload' => 2, 'vc_nome_arquivo' => 'agenda.pdf', 'vc_caminho_arquivo' => '/uploads/agenda.pdf'],
+    ['it_id_cartao' => 3, 'it_id_user_upload' => 3, 'vc_nome_arquivo' => 'teaser.png', 'vc_caminho_arquivo' => '/uploads/teaser.png'],
+    ['it_id_cartao' => 4, 'it_id_user_upload' => 4, 'vc_nome_arquivo' => 'bug_report.docx', 'vc_caminho_arquivo' => '/uploads/bug_report.docx'],
+    ['it_id_cartao' => 5, 'it_id_user_upload' => 5, 'vc_nome_arquivo' => 'menu_proposta.pdf', 'vc_caminho_arquivo' => '/uploads/menu_proposta.pdf'],
+    ['it_id_cartao' => 6, 'it_id_user_upload' => 6, 'vc_nome_arquivo' => 'logo_v1.png', 'vc_caminho_arquivo' => '/uploads/logo_v1.png']
+  ]"
+  ["comentarios"]="[
+    ['it_id_cartao' => 1, 'it_id_user_autor' => 2, 'vc_texto' => 'O banner precisa de mais contraste.'],
+    ['it_id_cartao' => 2, 'it_id_user_autor' => 3, 'vc_texto' => 'Confirmada para as 14h.'],
+    ['it_id_cartao' => 3, 'it_id_user_autor' => 4, 'vc_texto' => 'A imagem está pronta?'],
+    ['it_id_cartao' => 4, 'it_id_user_autor' => 5, 'vc_texto' => 'Corrigi dois bugs hoje.'],
+    ['it_id_cartao' => 5, 'it_id_user_autor' => 6, 'vc_texto' => 'Sugiro adicionar sobremesa.'],
+    ['it_id_cartao' => 6, 'it_id_user_autor' => 1, 'vc_texto' => 'Aprovado com ajustes menores.']
+  ]"
+  ["membro_quadros"]="[
+    ['it_id_quadro' => 1, 'it_id_user' => 1, 'vc_funcao' => 'Administrador'],
+    ['it_id_quadro' => 1, 'it_id_user' => 2, 'vc_funcao' => 'Editor'],
+    ['it_id_quadro' => 2, 'it_id_user' => 3, 'vc_funcao' => 'Membro'],
+    ['it_id_quadro' => 3, 'it_id_user' => 4, 'vc_funcao' => 'Gestor'],
+    ['it_id_quadro' => 4, 'it_id_user' => 5, 'vc_funcao' => 'Editor'],
+    ['it_id_quadro' => 5, 'it_id_user' => 6, 'vc_funcao' => 'Administrador']
+  ]"
+  ["cartao_etiquetas"]="[
+    ['it_id_cartao' => 1, 'it_id_etiqueta' => 1],
+    ['it_id_cartao' => 2, 'it_id_etiqueta' => 2],
+    ['it_id_cartao' => 3, 'it_id_etiqueta' => 3],
+    ['it_id_cartao' => 4, 'it_id_etiqueta' => 4],
+    ['it_id_cartao' => 5, 'it_id_etiqueta' => 5],
+    ['it_id_cartao' => 6, 'it_id_etiqueta' => 6]
+  ]"
+  ["chat_mensagems"]="[
+    ['it_id_quadro' => 1, 'it_id_user_autor' => 1, 'vc_texto_mensagem' => 'Equipa, precisamos acelerar.'],
+    ['it_id_quadro' => 2, 'it_id_user_autor' => 2, 'vc_texto_mensagem' => 'Alguém viu o plano?'],
+    ['it_id_quadro' => 3, 'it_id_user_autor' => 3, 'vc_texto_mensagem' => 'Reunião amanhã às 12h:30min.'],
+    ['it_id_quadro' => 4, 'it_id_user_autor' => 4, 'vc_texto_mensagem' => 'Progresso está fixe!'],
+    ['it_id_quadro' => 5, 'it_id_user_autor' => 5, 'vc_texto_mensagem' => 'Confio no vosso trabalho, acho kkk.'],
+    ['it_id_quadro' => 6, 'it_id_user_autor' => 6, 'vc_texto_mensagem' => 'Design finalizado hoje?']
+  ]"
+  ["chat_anexos"]="[
+    ['it_id_chat_mensagem' => 1, 'it_id_user_upload' => 1, 'vc_nome_arquivo' => 'plano.jpg', 'vc_caminho_arquivo' => '/uploads/plano.jpg'],
+    ['it_id_chat_mensagem' => 2, 'it_id_user_upload' => 2, 'vc_nome_arquivo' => 'posts.csv', 'vc_caminho_arquivo' => '/uploads/posts.xlsx'],
+    ['it_id_chat_mensagem' => 3, 'it_id_user_upload' => 3, 'vc_nome_arquivo' => 'descriao?projecto.pdf', 'vc_caminho_arquivo' => '/uploads/agenda_chat.pdf'],
+    ['it_id_chat_mensagem' => 4, 'it_id_user_upload' => 4, 'vc_nome_arquivo' => 'print_do_bug.png', 'vc_caminho_arquivo' => '/uploads/screenshot.png'],
+    ['it_id_chat_mensagem' => 5, 'it_id_user_upload' => 5, 'vc_nome_arquivo' => 'nota.txt', 'vc_caminho_arquivo' => '/uploads/nota.txt'],
+    ['it_id_chat_mensagem' => 6, 'it_id_user_upload' => 6, 'vc_nome_arquivo' => 'logo_final.png', 'vc_caminho_arquivo' => '/uploads/logo_final.png']
+  ]"
+  ["membro_cartaos"]="[
+    ['it_id_cartao' => 1, 'it_id_user' => 2],
+    ['it_id_cartao' => 2, 'it_id_user' => 3],
+    ['it_id_cartao' => 3, 'it_id_user' => 4],
+    ['it_id_cartao' => 4, 'it_id_user' => 5],
+    ['it_id_cartao' => 5, 'it_id_user' => 6],
+    ['it_id_cartao' => 6, 'it_id_user' => 1]
+  ]"
+  ["listas_verificacaos"]="[
+    ['it_id_cartao' => 1, 'vc_nome' => 'Design do esquema da DB'],
+    ['it_id_cartao' => 2, 'vc_nome' => 'Reunião'],
+    ['it_id_cartao' => 3, 'vc_nome' => 'Revisão do esquema da BD'],
+    ['it_id_cartao' => 4, 'vc_nome' => 'Resolução de bugs'],
+    ['it_id_cartao' => 5, 'vc_nome' => 'Revisão da correçã de gugs'],
+    ['it_id_cartao' => 6, 'vc_nome' => 'Revisão final']
+  ]"
+  ["itens_lista_verificacaos"]="[
+    ['it_id_lista_verificacao' => 1, 'vc_texto' => 'Escolher cores', 'bt_completo' => true],
+    ['it_id_lista_verificacao' => 2, 'vc_texto' => 'Confirmar participantes', 'bt_completo' => false],
+    ['it_id_lista_verificacao' => 3, 'vc_texto' => 'Aprovar texto', 'bt_completo' => true],
+    ['it_id_lista_verificacao' => 4, 'vc_texto' => 'Testar funcionalidade', 'bt_completo' => false],
+    ['it_id_lista_verificacao' => 5, 'vc_texto' => 'Contactar fornecedor', 'bt_completo' => true],
+    ['it_id_lista_verificacao' => 6, 'vc_texto' => 'Verificar tipografia', 'bt_completo' => false]
+  ]"
+  ["membro_workplaces"]="[
+    ['it_id_workplace' => 1, 'it_id_user' => 1, 'vc_funcao' => 'Administrador'],
+    ['it_id_workplace' => 2, 'it_id_user' => 2, 'vc_funcao' => 'Gestor'],
+    ['it_id_workplace' => 3, 'it_id_user' => 3, 'vc_funcao' => 'Membro'],
+    ['it_id_workplace' => 4, 'it_id_user' => 4, 'vc_funcao' => 'Editor'],
+    ['it_id_workplace' => 5, 'it_id_user' => 5, 'vc_funcao' => 'Administrador'],
+    ['it_id_workplace' => 6, 'it_id_user' => 6, 'vc_funcao' => 'Membro']
+  ]"
+  ["membro_quadro_convites"]="[
+    ['it_id_quadro' => 1, 'it_id_user_convidado' => 2, 'it_id_user_convidador' => 1, 'vc_status' => 'aceite'],
+    ['it_id_quadro' => 2, 'it_id_user_convidado' => 3, 'it_id_user_convidador' => 2, 'vc_status' => 'pendente'],
+    ['it_id_quadro' => 3, 'it_id_user_convidado' => 4, 'it_id_user_convidador' => 3, 'vc_status' => 'recusado'],
+    ['it_id_quadro' => 4, 'it_id_user_convidado' => 5, 'it_id_user_convidador' => 4, 'vc_status' => 'aceite'],
+    ['it_id_quadro' => 5, 'it_id_user_convidado' => 6, 'it_id_user_convidador' => 5, 'vc_status' => 'pendente'],
+    ['it_id_quadro' => 6, 'it_id_user_convidado' => 1, 'it_id_user_convidador' => 6, 'vc_status' => 'aceite']
+  ]"
+  ["membro_workplace_convites"]="[
+    ['it_id_workplace' => 1, 'it_id_user_convidado' => 3, 'it_id_user_convidador' => 1, 'vc_status' => 'aceite'],
+    ['it_id_workplace' => 2, 'it_id_user_convidado' => 4, 'it_id_user_convidador' => 2, 'vc_status' => 'pendente'],
+    ['it_id_workplace' => 3, 'it_id_user_convidado' => 5, 'it_id_user_convidador' => 3, 'vc_status' => 'recusado'],
+    ['it_id_workplace' => 4, 'it_id_user_convidado' => 6, 'it_id_user_convidador' => 4, 'vc_status' => 'aceite'],
+    ['it_id_workplace' => 5, 'it_id_user_convidado' => 1, 'it_id_user_convidador' => 5, 'vc_status' => 'pendente'],
+    ['it_id_workplace' => 6, 'it_id_user_convidado' => 2, 'it_id_user_convidador' => 6, 'vc_status' => 'aceite']
+  ]"
+)
 
-  # Write content to model file
-  echo "$content" > "$model_file"
-  echo "Generated $model model for table $table"
+# Generate DatabaseSeeder
+cat > database/seeders/DatabaseSeeder.php <<EOL
+<?php
+namespace Database\Seeders;
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    public function run()
+    {
+        \$this->call([
+$(for model in "${!tables[@]}"; do
+  echo "            ${tables[$model]}Seeder::class,"
+done)
+        ]);
+    }
+}
+EOL
+echo "Generated DatabaseSeeder.php"
+
+# Generate individual seeders
+for table in "${!tables[@]}"; do
+  model=${tables[$table]}
+  seeder_file="database/seeders/${model}Seeder.php"
+
+  # Special handling for UserSeeder to include bcrypt
+  if [ "$model" = "User" ]; then
+    cat > "$seeder_file" <<EOL
+<?php
+namespace Database\Seeders;
+use Illuminate\Database\Seeder;
+use App\Models\\$model;
+use Illuminate\Support\Facades\Hash;
+
+class ${model}Seeder extends Seeder
+{
+    public function run()
+    {
+        \$data = ${inserts[$table]};
+
+        foreach (\$data as \$item) {
+            \$item['password'] = Hash::make(\$item['password']);
+            ${model}::create(\$item);
+        }
+    }
+}
+EOL
+  else
+    cat > "$seeder_file" <<EOL
+<?php
+namespace Database\Seeders;
+use Illuminate\Database\Seeder;
+use App\Models\\$model;
+
+class ${model}Seeder extends Seeder
+{
+    public function run()
+    {
+        \$data = ${inserts[$table]};
+
+        foreach (\$data as \$item) {
+            ${model}::create(\$item);
+        }
+    }
+}
+EOL
+  fi
+  echo "Generated $seeder_file"
 done
 
-echo "All models generated successfully."
+echo "All seeders generated successfully."
+echo "Run 'php artisan db:seed' to populate the database."
