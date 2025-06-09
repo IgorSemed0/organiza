@@ -5,29 +5,31 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function Create({ workplaces, users }) {
     const { data, setData, post, processing, errors } = useForm({
         it_id_workplace: '',
-        it_id_user_convidado: '',
-        it_id_user_convidador: '',
-        vc_status: '',
+        it_id_user_criador: '',
+        vc_nome: '',
+        vc_descricao: '',
+        vc_visibilidade: '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('admin.membro_workplace_convites.store'));
+        post(route('admin.quadros.store'));
     };
 
     return (
-        <AdminLayout title="Criar Convite para Espaço de Trabalho">
-            <Head title="Criar Convite para Espaço de Trabalho" />
+        <AdminLayout title="Criar Quadro">
+            <Head title="Criar Quadro" />
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
-                        <CardTitle>Criar Convite para Espaço de Trabalho</CardTitle>
+                        <CardTitle>Criar Quadro</CardTitle>
                         <div className="flex space-x-2">
-                            <Link href={route('admin.membro_workplace_convites.index')}>
+                            <Link href={route('admin.quadros.index')}>
                                 <Button variant="outline">Voltar</Button>
                             </Link>
                         </div>
@@ -55,13 +57,13 @@ export default function Create({ workplaces, users }) {
                             {errors.it_id_workplace && <p className="text-sm text-red-500">{errors.it_id_workplace}</p>}
                         </div>
                         <div>
-                            <Label htmlFor="it_id_user_convidado">Convidado</Label>
+                            <Label htmlFor="it_id_user_criador">Criador</Label>
                             <Select
-                                value={data.it_id_user_convidado}
-                                onValueChange={(value) => setData('it_id_user_convidado', value)}
+                                value={data.it_id_user_criador}
+                                onValueChange={(value) => setData('it_id_user_criador', value)}
                             >
-                                <SelectTrigger id="it_id_user_convidado" className={errors.it_id_user_convidado ? 'border-red-500' : ''}>
-                                    <SelectValue placeholder="Selecione um utilizador convidado" />
+                                <SelectTrigger id="it_id_user_criador" className={errors.it_id_user_criador ? 'border-red-500' : ''}>
+                                    <SelectValue placeholder="Selecione um utilizador" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {users.map((user) => (
@@ -71,37 +73,39 @@ export default function Create({ workplaces, users }) {
                                     ))}
                                 </SelectContent>
                             </Select>
-                            {errors.it_id_user_convidado && <p className="text-sm text-red-500">{errors.it_id_user_convidado}</p>}
+                            {errors.it_id_user_criador && <p className="text-sm text-red-500">{errors.it_id_user_criador}</p>}
                         </div>
                         <div>
-                            <Label htmlFor="it_id_user_convidador">Convidador</Label>
-                            <Select
-                                value={data.it_id_user_convidador}
-                                onValueChange={(value) => setData('it_id_user_convidador', value)}
-                            >
-                                <SelectTrigger id="it_id_user_convidador" className={errors.it_id_user_convidador ? 'border-red-500' : ''}>
-                                    <SelectValue placeholder="Selecione um utilizador convidador" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {users.map((user) => (
-                                        <SelectItem key={user.id} value={user.id.toString()}>
-                                            {user.vc_nome}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            {errors.it_id_user_convidador && <p className="text-sm text-red-500">{errors.it_id_user_convidador}</p>}
-                        </div>
-                        <div>
-                            <Label htmlFor="vc_status">Status</Label>
+                            <Label htmlFor="vc_nome">Nome</Label>
                             <Input
-                                id="vc_status"
+                                id="vc_nome"
                                 type="text"
-                                value={data.vc_status}
-                                onChange={(e) => setData('vc_status', e.target.value)}
-                                className={errors.vc_status ? 'border-red-500' : ''}
+                                value={data.vc_nome}
+                                onChange={(e) => setData('vc_nome', e.target.value)}
+                                className={errors.vc_nome ? 'border-red-500' : ''}
                             />
-                            {errors.vc_status && <p className="text-sm text-red-500">{errors.vc_status}</p>}
+                            {errors.vc_nome && <p className="text-sm text-red-500">{errors.vc_nome}</p>}
+                        </div>
+                        <div>
+                            <Label htmlFor="vc_descricao">Descrição</Label>
+                            <Textarea
+                                id="vc_descricao"
+                                value={data.vc_descricao}
+                                onChange={(e) => setData('vc_descricao', e.target.value)}
+                                className={errors.vc_descricao ? 'border-red-500' : ''}
+                            />
+                            {errors.vc_descricao && <p className="text-sm text-red-500">{errors.vc_descricao}</p>}
+                        </div>
+                        <div>
+                            <Label htmlFor="vc_visibilidade">Visibilidade</Label>
+                            <Input
+                                id="vc_visibilidade"
+                                type="text"
+                                value={data.vc_visibilidade}
+                                onChange={(e) => setData('vc_visibilidade', e.target.value)}
+                                className={errors.vc_visibilidade ? 'border-red-500' : ''}
+                            />
+                            {errors.vc_visibilidade && <p className="text-sm text-red-500">{errors.vc_visibilidade}</p>}
                         </div>
                         <div className="flex space-x-2">
                             <Button type="submit" disabled={processing}>Criar</Button>

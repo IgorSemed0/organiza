@@ -12,44 +12,45 @@ export default function Index({ items, filters }) {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get(route('admin.membro_workplace_convites.index'), { search }, { preserveState: true });
+        router.get(route('admin.quadros.index'), { search }, { preserveState: true });
     };
 
     const handleDelete = (id: number) => {
-        if (confirm('Tem a certeza que deseja eliminar este convite para espaço de trabalho?')) {
-            router.delete(route('admin.membro_workplace_convites.destroy', id));
+        if (confirm('Tem a certeza que deseja eliminar este quadro?')) {
+            router.delete(route('admin.quadros.destroy', id));
         }
     };
 
     return (
-        <AdminLayout title="Gestão de Convites para Espaços de Trabalho">
-            <Head title="Gestão de Convites para Espaços de Trabalho" />
+        <AdminLayout title="Gestão de Quadros">
+            <Head title="Gestão de Quadros" />
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
-                        <CardTitle>Gestão de Convites para Espaços de Trabalho</CardTitle>
+                        <CardTitle>Gestão de Quadros</CardTitle>
                         <div className="flex space-x-2">
-                            <Link href={route('admin.membro_workplace_convites.trash')}>
+                            <Link href={route('admin.quadros.trash')}>
                                 <Button variant="outline">
                                     <Trash2 className="mr-2 h-4 w-4" />
                                     Lixo
                                 </Button>
                             </Link>
-                            <Link href={route('admin.membro_workplace_convites.create')}>
+                            <Link href={route('admin.quadros.create')}>
                                 <Button>
                                     <Plus className="mr-2 h-4 w-4" />
-                                    Criar Convite
+                                    Criar Quadro
                                 </Button>
-                            </div>
+                            </Link>
                         </div>
-                    </CardHeader>
+                    </div>
+                </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSearch} className="mb-4 flex space-x-2">
                         <div className="relative flex-1">
-                            <Search className="absolute left-3 top-1/2 h-4 w-1/2 text-gray-400 -translate-y-1/2" />
+                            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                             <Input
                                 type="text"
-                                placeholder="Pesquisar convite para espaço de trabalho..."
+                                placeholder="Pesquisar quadro..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 className="pl-10"
@@ -61,10 +62,10 @@ export default function Index({ items, filters }) {
                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead className="bg-gray-50 dark:bg-gray-700">
                                 <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Nome</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Espaço de Trabalho</th>
-                                    <th className="px-6 py-3 text-left text-left font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Convidado</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Convidador</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Status</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Criador</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Visibilidade</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Criado Em</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Ações</th>
                                 </tr>
@@ -72,17 +73,17 @@ export default function Index({ items, filters }) {
                             <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
                                 {items.data.map((item) => (
                                     <tr key={item.id}>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{item.workplace?.vc_nome || 'N/A'}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.user_convidado?.vc_nome || 'N/A'}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.user_convidador?.vc_nome || 'N/A'}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.vc_status}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{item.vc_nome}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.workplace?.vc_nome || 'N/A'}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.user_criador?.vc_nome || 'N/A'}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.vc_visibilidade}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{new Date(item.created_at).toLocaleDateString('pt-PT')}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                                             <div className="flex space-x-2">
-                                                <Link href={route('admin.membro_workplace_convites.show', item.id)}>
+                                                <Link href={route('admin.quadros.show', item.id)}>
                                                     <Button variant="outline" size="sm">Ver</Button>
                                                 </Link>
-                                                <Link href={route('admin.membro_workplace_convites.edit', item.id)}>
+                                                <Link href={route('admin.quadros.edit', item.id)}>
                                                     <Button variant="outline" size="sm">Editar</Button>
                                                 </Link>
                                                 <Button

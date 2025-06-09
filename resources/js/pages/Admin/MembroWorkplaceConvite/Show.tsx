@@ -5,14 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Show({ item }) {
     return (
-        <AdminLayout title="Detalhes do Convite para Espaço de Trabalho">
-            <Head title="Detalhes do Convite para Espaço de Trabalho" />
+        <AdminLayout title="Detalhes do Quadro">
+            <Head title="Detalhes do Quadro" />
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
-                        <CardTitle>Detalhes do Convite para Espaço de Trabalho</CardTitle>
+                        <CardTitle>Detalhes do Quadro</CardTitle>
                         <div className="flex space-x-2">
-                            <Link href={route('admin.membro_workplace_convites.index')}>
+                            <Link href={route('admin.quadros.index')}>
                                 <Button variant="outline">Voltar</Button>
                             </Link>
                         </div>
@@ -25,16 +25,20 @@ export default function Show({ item }) {
                             <p className="text-gray-900 dark:text-white">{item.workplace?.vc_nome || 'N/A'}</p>
                         </div>
                         <div>
-                            <h3 className="text-sm font-medium text-gray-500">Convidado</h3>
-                            <p className="text-gray-900 dark:text-white">{item.user_convidado?.vc_nome || 'N/A'}</p>
+                            <h3 className="text-sm font-medium text-gray-500">Criador</h3>
+                            <p className="text-gray-900 dark:text-white">{item.user_criador?.vc_nome || 'N/A'}</p>
                         </div>
                         <div>
-                            <h3 className="text-sm font-medium text-gray-500">Convidador</h3>
-                            <p className="text-gray-900 dark:text-white">{item.user_convidador?.vc_nome || 'N/A'}</p>
+                            <h3 className="text-sm font-medium text-gray-500">Nome</h3>
+                            <p className="text-gray-900 dark:text-white">{item.vc_nome}</p>
                         </div>
                         <div>
-                            <h3 className="text-sm font-medium text-gray-500">Status</h3>
-                            <p className="text-gray-900 dark:text-white">{item.vc_status}</p>
+                            <h3 className="text-sm font-medium text-gray-500">Descrição</h3>
+                            <p className="text-gray-900 dark:text-white">{item.vc_descricao || 'N/A'}</p>
+                        </div>
+                        <div>
+                            <h3 className="text-sm font-medium text-gray-500">Visibilidade</h3>
+                            <p className="text-gray-900 dark:text-white">{item.vc_visibilidade}</p>
                         </div>
                         <div>
                             <h3 className="text-sm font-medium text-gray-500">Criado Em</h3>

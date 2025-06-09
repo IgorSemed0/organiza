@@ -14,12 +14,12 @@ export default function Trash({ items, filters }) {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get(route('admin.membro_workplace_convites.trash'), { search }, { preserveState: true });
+        router.get(route('admin.quadros.trash'), { search }, { preserveState: true });
     };
 
     const handleRestore = (id: number) => {
-        if (confirm('Tem a certeza que deseja restaurar este convite para espaço de trabalho?')) {
-            post(route('admin.membro_workplace_convites.restore', id), {
+        if (confirm('Tem a certeza que deseja restaurar este quadro?')) {
+            post(route('admin.quadros.restore', id), {
                 onSuccess: () => {
                     reset();
                     router.reload({ only: ['items', 'filters'] });
@@ -29,8 +29,8 @@ export default function Trash({ items, filters }) {
     };
 
     const handlePurge = (id: number) => {
-        if (confirm('Tem a certeza que deseja eliminar permanentemente este convite para espaço de trabalho?')) {
-            deleteRequest(route('admin.membro_workplace_convites.purge', id), {
+        if (confirm('Tem a certeza que deseja eliminar permanentemente este quadro?')) {
+            deleteRequest(route('admin.quadros.purge', id), {
                 onSuccess: () => {
                     reset();
                     router.reload({ only: ['items', 'filters'] });
@@ -40,14 +40,14 @@ export default function Trash({ items, filters }) {
     };
 
     return (
-        <AdminLayout title="Lixo de Convites para Espaços de Trabalho">
-            <Head title="Lixo de Convites para Espaços de Trabalho" />
+        <AdminLayout title="Lixo de Quadros">
+            <Head title="Lixo de Quadros" />
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
-                        <CardTitle>Lixo de Convites para Espaços de Trabalho</CardTitle>
+                        <CardTitle>Lixo de Quadros</CardTitle>
                         <div className="flex space-x-2">
-                            <Link href={route('admin.membro_workplace_convites.index')}>
+                            <Link href={route('admin.quadros.index')}>
                                 <Button variant="outline">Voltar</Button>
                             </Link>
                         </div>
@@ -66,7 +66,7 @@ export default function Trash({ items, filters }) {
                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                             <Input
                                 type="text"
-                                placeholder="Pesquisar convite para espaço de trabalho eliminado..."
+                                placeholder="Pesquisar quadro eliminado..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 className="pl-10"
@@ -78,10 +78,10 @@ export default function Trash({ items, filters }) {
                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead className="bg-gray-50 dark:bg-gray-700">
                                 <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Nome</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Espaço de Trabalho</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Convidado</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Convidador</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Status</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Criador</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Visibilidade</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Eliminado Em</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Ações</th>
                                 </tr>
@@ -89,10 +89,10 @@ export default function Trash({ items, filters }) {
                             <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
                                 {items.data.map((item) => (
                                     <tr key={item.id}>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{item.workplace?.vc_nome || 'N/A'}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.user_convidado?.vc_nome || 'N/A'}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.user_convidador?.vc_nome || 'N/A'}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.vc_status}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{item.vc_nome}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.workplace?.vc_nome || 'N/A'}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.user_criador?.vc_nome || 'N/A'}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.vc_visibilidade}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{new Date(item.deleted_at).toLocaleDateString('pt-PT')}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                                             <div className="flex space-x-2">
