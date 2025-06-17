@@ -13,5 +13,5 @@ class MembroCartao extends Model
     protected $fillable = ['it_id_cartao', 'it_id_user'];
 
     public function cartao() { return $this->belongsTo(Cartao::class, 'it_id_cartao'); }
-                    public function user() { return $this->belongsTo(User::class, 'it_id_user'); }
+    public function user() { return $this->belongsTo(User::class, 'it_id_user'); }
 }
