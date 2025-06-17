@@ -196,15 +196,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::get('reports/users-pdf', [App\Http\Controllers\Admin\PdfController::class, 'usersPdf'])->name('admin.reports.users-pdf');
-            Route::get('reports/workplaces-pdf', [App\Http\Controllers\Admin\PdfController::class, 'workplacesPdf'])->name('admin.reports.workplaces-pdf');
-            Route::get('reports/quadros-pdf', [App\Http\Controllers\Admin\PdfController::class, 'quadrosPdf'])->name('admin.reports.quadros-pdf');
-            Route::get('reports', function () {
-                $tipos_user = App\Models\TipoUser::all();
-                $workplaces = App\Models\Workplace::all();
-                return Inertia::render('Admin/Reports/Index', [
-                    'tipos_user' => $tipos_user,
-                    'workplaces' => $workplaces,
-                ]);
-            })->name('admin.reports.index');
+        Route::get('reports/workplaces-pdf', [App\Http\Controllers\Admin\PdfController::class, 'workplacesPdf'])->name('admin.reports.workplaces-pdf');  
+        Route::get('reports/quadros-pdf', [App\Http\Controllers\Admin\PdfController::class, 'quadrosPdf'])->name('admin.reports.quadros-pdf');
+        
+        // NEW: Activity report route
+        Route::get('reports/activity-pdf', [App\Http\Controllers\Admin\PdfController::class, 'activityPdf'])->name('admin.reports.activity-pdf');
+        
+        Route::get('reports', function () {
+            $tipos_user = App\Models\TipoUser::all();
+            $workplaces = App\Models\Workplace::all();
+            $users = App\Models\User::all(); // For creator filters
+            
+            return Inertia::render('Admin/Reports/Index', [
+                'tipos_user' => $tipos_user,
+                'workplaces' => $workplaces,
+                'users' => $users, // Pass users for creator dropdown filters
+            ]);
+        })->name('admin.reports.index');
     });
 });

@@ -10,7 +10,7 @@ class Quadro extends Model
 
     protected $table = 'quadros';
 
-    protected $fillable = ['it_id_workplace', 'it_id_user_criador', 'vc_nome', 'vc_descricao', 'vc_visibilidade'];
+    protected $fillable = ['it_id_workplace', 'it_id_user_criador', 'vc_nome', 'vc_descricao'];
 
     public function workplace()
     {
