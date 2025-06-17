@@ -1,35 +1,81 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import React from 'react';
 import { Head } from '@inertiajs/react';
+import AdminLayout from '@/layouts/app-layout';
+import { Bar, Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-    },
-];
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
-export default function Dashboard() {
+interface ChartData {
+    label: string;
+    count: number;
+}
+
+interface Props {
+    usersByType: ChartData[];
+    workplacesByVisibility: ChartData[];
+    quadrosByWorkplace: ChartData[];
+}
+
+export default function Dashboard({ usersByType, workplacesByVisibility, quadrosByWorkplace }: Props) {
+    const usersBarData = {
+        labels: usersByType.map(item => item.label),
+        datasets: [{
+            label: 'Users',
+            data: usersByType.map(item => item.count),
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        }],
+    };
+
+    const workplacesPieData = {
+        labels: workplacesByVisibility.map(item => item.label),
+        datasets: [{
+            data: workplacesByVisibility.map(item => item.count),
+            backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)'],
+        }],
+    };
+
+    const quadrosBarData = {
+        labels: quadrosByWorkplace.map(item => item.label),
+        datasets: [{
+            label: 'Quadros',
+            data: quadrosByWorkplace.map(item => item.count),
+            backgroundColor: 'rgba(153, 102, 255, 0.6)',
+        }],
+    };
+
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AdminLayout title="Dashboard">
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
+            <div className="space-y-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Users by Type</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Bar data={usersBarData} options={{ responsive: true, plugins: { legend: { position: 'top' } } }} />
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Workplaces by Visibility</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Pie data={workplacesPieData} options={{ responsive: true, plugins: { legend: { position: 'top' } } }} />
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Quadros by Workplace (Top 5)</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Bar data={quadrosBarData} options={{ responsive: true, plugins: { legend: { position: 'top' } } }} />
+                    </CardContent>
+                </Card>
             </div>
-        </AppLayout>
+        </AdminLayout>
     );
 }
