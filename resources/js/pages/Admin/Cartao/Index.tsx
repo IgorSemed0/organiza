@@ -12,33 +12,33 @@ export default function Index({ items, filters }) {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get(route('admin.listas.index'), { search }, { preserveState: true });
+        router.get(route('admin.cartaos.index'), { search }, { preserveState: true });
     };
 
     const handleDelete = (id: number) => {
-        if (confirm('Tem a certeza que deseja eliminar esta lista?')) {
-            router.delete(route('admin.listas.destroy', id));
+        if (confirm('Tem a certeza que deseja eliminar este cartão?')) {
+            router.delete(route('admin.cartaos.destroy', id));
         }
     };
 
     return (
-        <AdminLayout title="Gestão de Listas">
-            <Head title="Gestão de Listas" />
+        <AdminLayout title="Gestão de Cartões">
+            <Head title="Gestão de Cartões" />
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
-                        <CardTitle>Gestão de Listas</CardTitle>
+                        <CardTitle>Gestão de Cartões</CardTitle>
                         <div className="flex space-x-2">
-                            <Link href={route('admin.listas.trash')}>
+                            <Link href={route('admin.cartaos.trash')}>
                                 <Button variant="outline">
                                     <Trash2 className="mr-2 h-4 w-4" />
                                     Lixo
                                 </Button>
                             </Link>
-                            <Link href={route('admin.listas.create')}>
+                            <Link href={route('admin.cartaos.create')}>
                                 <Button>
                                     <Plus className="mr-2 h-4 w-4" />
-                                    Criar Lista
+                                    Criar Cartão
                                 </Button>
                             </Link>
                         </div>
@@ -50,7 +50,7 @@ export default function Index({ items, filters }) {
                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                             <Input
                                 type="text"
-                                placeholder="Pesquisar lista..."
+                                placeholder="Pesquisar cartão..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 className="pl-10"
@@ -62,9 +62,10 @@ export default function Index({ items, filters }) {
                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead className="bg-gray-50 dark:bg-gray-700">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Quadro</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Nome</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Ordem</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Título</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Lista</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Criador</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Data de Vencimento</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Criado Em</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Ações</th>
                                 </tr>
@@ -72,16 +73,17 @@ export default function Index({ items, filters }) {
                             <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
                                 {items.data.map((item) => (
                                     <tr key={item.id}>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{item.quadro?.vc_nome || 'N/A'}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.vc_nome}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.it_ordem}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{item.vc_titulo}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.lista?.vc_nome || 'N/A'}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.user_criador?.vc_nome || 'N/A'}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.dt_data_vencimento ? new Date(item.dt_data_vencimento).toLocaleDateString('pt-PT') : 'N/A'}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{new Date(item.created_at).toLocaleDateString('pt-PT')}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                                             <div className="flex space-x-2">
-                                                <Link href={route('admin.listas.show', item.id)}>
+                                                <Link href={route('admin.cartaos.show', item.id)}>
                                                     <Button variant="outline" size="sm">Ver</Button>
                                                 </Link>
-                                                <Link href={route('admin.listas.edit', item.id)}>
+                                                <Link href={route('admin.cartaos.edit', item.id)}>
                                                     <Button variant="outline" size="sm">Editar</Button>
                                                 </Link>
                                                 <Button

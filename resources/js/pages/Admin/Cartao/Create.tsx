@@ -5,64 +5,108 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MultiSelect } from '@/components/ui/multi-select';
 
-export default function Create({ quadros }) {
+export default function Create({ listas, usuarios, etiquetas }) {
     const { data, setData, post, processing, errors } = useForm({
-        it_id_quadro: '',
-        vc_nome: '',
+        it_id_lista: '',
+        it_id_usuario_criador: '',
+        vc_titulo: '',
+        vc_descricao: '',
+        dt_data_vencimento: '',
         it_ordem: '',
+        etiquetas: [],
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('admin.listas.store'));
+        post(route('admin.cartaos.store'));
     };
 
     return (
-        <AdminLayout title="Criar Lista">
-            <Head title="Criar Lista" />
+        <AdminLayout title="Criar Cartão">
+            <Head title="Criar Cartão" />
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
-                        <CardTitle>Criar Lista</CardTitle>
-                        <div className="flex space-x-2">
-                            <Link href={route('admin.listas.index')}>
-                                <Button variant="outline">Voltar</Button>
-                            </Link>
-                        </div>
+                        <CardTitle>Criar Cartão</CardTitle>
+                        <Link href={route('admin.cartaos.index')}>
+                            <Button variant="outline">Voltar</Button>
+                        </Link>
                     </div>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <Label htmlFor="it_id_quadro">Quadro</Label>
+                            <Label htmlFor="it_id_lista">Lista</Label>
                             <Select
-                                value={data.it_id_quadro}
-                                onValueChange={(value) => setData('it_id_quadro', value)}
+                                value={data.it_id_lista}
+                                onValueChange={(value) => setData('it_id_lista', value)}
                             >
-                                <SelectTrigger id="it_id_quadro" className={errors.it_id_quadro ? 'border-red-500' : ''}>
-                                    <SelectValue placeholder="Selecione um quadro" />
+                                <SelectTrigger id="it_id_lista" className={errors.it_id_lista ? 'border-red-500' : ''}>
+                                    <SelectValue placeholder="Selecione uma lista" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {quadros.map((quadro) => (
-                                        <SelectItem key={quadro.id} value={quadro.id.toString()}>
-                                            {quadro.vc_nome}
+                                    {listas.map((lista) => (
+                                        <SelectItem key={lista.id} value={lista.id.toString()}>
+                                            {lista.vc_nome}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
-                            {errors.it_id_quadro && <p className="text-sm text-red-500">{errors.it_id_quadro}</p>}
+                            {errors.it_id_lista && <p className="text-sm text-red-500">{errors.it_id_lista}</p>}
                         </div>
                         <div>
-                            <Label htmlFor="vc_nome">Nome</Label>
+                            <Label htmlFor="it_id_usuario_criador">Criador</Label>
+                            <Select
+                                value={data.it_id_usuario_criador}
+                                onValueChange={(value) => setData('it_id_usuario_criador', value)}
+                            >
+                                <SelectTrigger id="it_id_usuario_criador" className={errors.it_id_usuario_criador ? 'border-red-500' : ''}>
+                                    <SelectValue placeholder="Selecione um utilizador" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {usuarios.map((user) => (
+                                        <SelectItem key={user.id} value={user.id.toString()}>
+                                            {user.vc_nome}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {errors.it.shadow_user_criador && <p className="text-sm text-red-500">{errors.it_id_usuario_criador}</p>}
+                        </div>
+                        <div>
+                            <Label htmlFor="vc_titulo">Título</Label>
                             <Input
-                                id="vc_nome"
+                                id="vc_titulo"
                                 type="text"
-                                value={data.vc_nome}
-                                onChange={(e) => setData('vc_nome', e.target.value)}
-                                className={errors.vc_nome ? 'border-red-500' : ''}
+                                value={data.vc_titulo}
+                                onChange={(e) => setData('vc_titulo', e.target.value)}
+                                className={errors.vc_titulo ? 'border-red-500' : ''}
                             />
-                            {errors.vc_nome && <p className="text-sm text-red-500">{errors.vc_nome}</p>}
+                            {errors.vc_titulo && <p className="text-sm text-red-500">{errors.vc_titulo}</p>}
+                        </div>
+                        <div>
+                            <Label htmlFor="vc_descricao">Descrição</Label>
+                            <Input
+                                id="vc_descricao"
+                                type="text"
+                                value={data.vc_descricao}
+                                onChange={(e) => setData('vc_descricao', e.target.value)}
+                                className={errors.vc_descricao ? 'border-red-500' : ''}
+                            />
+                            {errors.vc_descrição && <p className="text-sm text-red-500">{errors.vc_descricao}</p>}
+                        </div>
+                        <div>
+                            <Label htmlFor="dt_data_vencimento">Data de Vencimento</Label>
+                            <Input
+                                id="dt_data_vencimento"
+                                type="date"
+                                value={data.dt_data_vencimento}
+                                onChange={(e) => setData('dt_data_vencimento', e.target.value)}
+                                className={errors.dt_data_vencimento ? 'border-red-500' : ''}
+                            />
+                            {errors.dt_data_vencimento && <p className="text-sm text-red-500">{errors.dt_data_vencimento}</p>}
                         </div>
                         <div>
                             <Label htmlFor="it_ordem">Ordem</Label>
@@ -75,9 +119,18 @@ export default function Create({ quadros }) {
                             />
                             {errors.it_ordem && <p className="text-sm text-red-500">{errors.it_ordem}</p>}
                         </div>
-                        <div className="flex space-x-2">
-                            <Button type="submit" disabled={processing}>Criar</Button>
+                        <div>
+                            <Label htmlFor="etiquetas">Etiquetas</Label>
+                            <MultiSelect
+                                options={etiquetas.map((etiqueta) => ({ value: etiqueta.id.toString(), label: etiqueta.vc_nome }))}
+                                selected={data.etiquetas}
+                                onChange={(selected) => setData('etiquetas', selected)}
+                                placeholder="Selecione etiquetas"
+                                className={errors.etiquetas ? 'border-red-500' : ''}
+                            />
+                            {errors.etiquetas && <p className="text-sm text-red-500">{errors.etiquetas}</p>}
                         </div>
+                        <Button type="submit" disabled={processing}>Criar</Button>
                     </form>
                 </CardContent>
             </Card>
