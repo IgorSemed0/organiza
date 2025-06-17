@@ -14,12 +14,12 @@ export default function Trash({ items, filters }) {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get(route('admin.listas.trash'), { search }, { preserveState: true });
+        router.get(route('admin.listas_verificacaos.trash'), { search }, { preserveState: true });
     };
 
     const handleRestore = (id: number) => {
-        if (confirm('Tem a certeza que deseja restaurar esta lista?')) {
-            post(route('admin.listas.restore', id), {
+        if (confirm('Tem a certeza que deseja restaurar esta lista de verificação?')) {
+            post(route('admin.listas_verificacaos.restore', id), {
                 onSuccess: () => {
                     reset();
                     router.reload({ only: ['items', 'filters'] });
@@ -29,8 +29,8 @@ export default function Trash({ items, filters }) {
     };
 
     const handlePurge = (id: number) => {
-        if (confirm('Tem a certeza que deseja eliminar permanentemente esta lista?')) {
-            deleteRequest(route('admin.listas.purge', id), {
+        if (confirm('Tem a certeza que deseja eliminar permanentemente esta lista de verificação?')) {
+            deleteRequest(route('admin.listas_verificacaos.purge', id), {
                 onSuccess: () => {
                     reset();
                     router.reload({ only: ['items', 'filters'] });
@@ -40,14 +40,14 @@ export default function Trash({ items, filters }) {
     };
 
     return (
-        <AdminLayout title="Lixo de Listas">
-            <Head title="Lixo de Listas" />
+        <AdminLayout title="Lixo de Listas de Verificação">
+            <Head title="Lixo de Listas de Verificação" />
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
-                        <CardTitle>Lixo de Listas</CardTitle>
+                        <CardTitle>Lixo de Listas de Verificação</CardTitle>
                         <div className="flex space-x-2">
-                            <Link href={route('admin.listas.index')}>
+                            <Link href={route('admin.listas_verificacaos.index')}>
                                 <Button variant="outline">Voltar</Button>
                             </Link>
                         </div>
@@ -66,7 +66,7 @@ export default function Trash({ items, filters }) {
                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                             <Input
                                 type="text"
-                                placeholder="Pesquisar lista eliminada..."
+                                placeholder="Pesquisar lista de verificação eliminada..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 className="pl-10"
@@ -78,9 +78,8 @@ export default function Trash({ items, filters }) {
                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead className="bg-gray-50 dark:bg-gray-700">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Quadro</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Cartão</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Nome</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Ordem</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Eliminado Em</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Ações</th>
                                 </tr>
@@ -88,9 +87,8 @@ export default function Trash({ items, filters }) {
                             <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
                                 {items.data.map((item) => (
                                     <tr key={item.id}>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{item.quadro?.vc_nome || 'N/A'}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">{item.cartao?.vc_titulo || 'N/A'}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.vc_nome}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{item.it_ordem}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">{new Date(item.deleted_at).toLocaleDateString('pt-PT')}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                                             <div className="flex space-x-2">

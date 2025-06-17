@@ -5,14 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Show({ item }) {
     return (
-        <AdminLayout title="Detalhes da Lista">
-            <Head title="Detalhes da Lista" />
+        <AdminLayout title="Detalhes da Lista de Verificação">
+            <Head title="Detalhes da Lista de Verificação" />
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
-                        <CardTitle>Detalhes da Lista</CardTitle>
+                        <CardTitle>Detalhes da Lista de Verificação</CardTitle>
                         <div className="flex space-x-2">
-                            <Link href={route('admin.listas.index')}>
+                            <Link href={route('admin.listas_verificacaos.index')}>
                                 <Button variant="outline">Voltar</Button>
                             </Link>
                         </div>
@@ -21,16 +21,12 @@ export default function Show({ item }) {
                 <CardContent>
                     <div className="space-y-4">
                         <div>
-                            <h3 className="text-sm font-medium text-gray-500">Quadro</h3>
-                            <p className="text-gray-900 dark:text-white">{item.quadro?.vc_nome || 'N/A'}</p>
+                            <h3 className="text-sm font-medium text-gray-500">Cartão</h3>
+                            <p className="text-gray-900 dark:text-white">{item.cartao?.vc_titulo || 'N/A'}</p>
                         </div>
                         <div>
                             <h3 className="text-sm font-medium text-gray-500">Nome</h3>
                             <p className="text-gray-900 dark:text-white">{item.vc_nome}</p>
-                        </div>
-                        <div>
-                            <h3 className="text-sm font-medium text-gray-500">Ordem</h3>
-                            <p className="text-gray-900 dark:text-white">{item.it_ordem}</p>
                         </div>
                         <div>
                             <h3 className="text-sm font-medium text-gray-500">Criado Em</h3>
