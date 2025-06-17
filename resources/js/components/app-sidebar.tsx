@@ -200,20 +200,14 @@ const mainNavItems: NavItem[] = [
             },
         ],
     },
+    {
+        title: 'Relatórios',
+        href: route('admin.reports.index'),
+        icon: FileText,
+    },
 ];
 
-const footerNavItems: NavItem[] = [
-    // {
-    //     title: 'Repositório',
-    //     href: 'https://github.com/laravel/react-starter-kit',
-    //     icon: Folder,
-    // },
-    // {
-    //     title: 'Documentação',
-    //     href: 'https://laravel.com/docs/starter-kits#react',
-    //     icon: BookOpen,
-    // },
-];
+const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
     return (

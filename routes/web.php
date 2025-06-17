@@ -194,8 +194,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('{id}/restore', ['as' => 'restore', 'uses' => 'App\Http\Controllers\Admin\MembroWorkplaceConviteController@restore']);
             Route::delete('{id}/purge', ['as' => 'purge', 'uses' => 'App\Http\Controllers\Admin\MembroWorkplaceConviteController@purge']);
         });
-    });
-});
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+        Route::get('reports', function () {
+            $tipos_user = App\Models\TipoUser::all();
+            $workplaces = App\Models\Workplace::all();
+            return Inertia::render('Admin/Reports/Index', [
+                'tipos_user' => $tipos_user,
+                'workplaces' => $workplaces,
+            ]);
+        })->name('admin.reports.index');
+});
+});

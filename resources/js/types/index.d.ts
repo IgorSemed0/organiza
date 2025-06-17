@@ -43,3 +43,14 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface TipoUser {
+    id: number;
+    vc_nome: string;
+}
+
+export interface Workplace {
+    id: number;
+    vc_nome: string;
+    vc_visibilidade?: string;
+}
