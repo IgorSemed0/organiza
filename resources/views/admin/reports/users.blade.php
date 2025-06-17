@@ -14,8 +14,8 @@
     <p>Data do relatório: {{ now()->format('d/m/Y') }}</p>
     
     <!-- Display applied filters -->
-    @if (request('tipo_user_id'))
-        <p>Filtrado por Tipo de Utilizador: {{ $tipos_user->find(request('tipo_user_id'))->vc_nome }}</p>
+    @if (request('tipo_user_id') && request('tipo_user_id') !== 'all')
+        <p>Filtrado por Tipo de Utilizador: {{ $tipos_user->find(request('tipo_user_id'))->vc_nome ?? 'N/A' }}</p>
     @endif
     @if (request('data_registo_de'))
         <p>Filtrado por Data de Registo a partir de: {{ request('data_registo_de') }}</p>
@@ -38,10 +38,10 @@
             @foreach ($users as $user)
                 <tr>
                     <td>{{ $user->id }}</td>
-                    <td>{{ $user->vc_nome }}</td>
-                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->vc_nome ?? 'N/A' }}</td>
+                    <td>{{ $user->email ?? 'N/A' }}</td>
                     <td>{{ $user->tipo_user->vc_nome ?? 'N/A' }}</td>
-                    <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
+                    <td>{{ $user->created_at ? $user->created_at->format('d/m/Y H:i') : 'N/A' }}</td>
                 </tr>
             @endforeach
         </tbody>

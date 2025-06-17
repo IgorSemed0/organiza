@@ -20,7 +20,7 @@
     @if (request('data_criacao_ate'))
         <p>Filtrado por Data de Criação até: {{ request('data_criacao_ate') }}</p>
     @endif
-    @if (request('visibilidade'))
+    @if (request('visibilidade') && request('visibilidade') !== 'all')
         <p>Filtrado por Visibilidade: {{ request('visibilidade') }}</p>
     @endif
 
@@ -38,10 +38,10 @@
             @foreach ($workplaces as $workplace)
                 <tr>
                     <td>{{ $workplace->id }}</td>
-                    <td>{{ $workplace->vc_nome }}</td>
+                    <td>{{ $workplace->vc_nome ?? 'N/A' }}</td>
                     <td>{{ $workplace->user_criador->vc_nome ?? 'N/A' }}</td>
-                    <td>{{ $workplace->vc_visibilidade }}</td>
-                    <td>{{ $workplace->created_at->format('d/m/Y H:i') }}</td>
+                    <td>{{ $workplace->vc_visibilidade ?? 'N/A' }}</td>
+                    <td>{{ $workplace->created_at ? $workplace->created_at->format('d/m/Y H:i') : 'N/A' }}</td>
                 </tr>
             @endforeach
         </tbody>

@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
-    use SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'vc_nome',
@@ -17,73 +16,83 @@ class User extends Authenticatable
         'password',
         'it_id_tipo_user'
     ];
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    public function tipoUser()
+    public function tipo_user()
     {
         return $this->belongsTo(TipoUser::class, 'it_id_tipo_user');
     }
+
     public function workplaces()
     {
         return $this->hasMany(Workplace::class, 'it_id_user_criador');
     }
+
     public function quadros()
     {
         return $this->hasMany(Quadro::class, 'it_id_user_criador');
     }
+
     public function cartaos()
     {
         return $this->hasMany(Cartao::class, 'it_id_user_criador');
     }
+
     public function anexos()
     {
         return $this->hasMany(Anexo::class, 'it_id_user_upload');
     }
+
     public function comentarios()
     {
         return $this->hasMany(Comentario::class, 'it_id_user_autor');
     }
-    public function membroQuadros()
+
+    public function membro_quadros()
     {
         return $this->hasMany(MembroQuadro::class, 'it_id_user');
     }
-    public function chatMensagens()
+
+    public function chat_mensagens()
     {
         return $this->hasMany(ChatMensagem::class, 'it_id_user_autor');
     }
-    public function chatAnexos()
+
+    public function chat_anexos()
     {
         return $this->hasMany(ChatAnexo::class, 'it_id_user_upload');
     }
-    public function membroCartaos()
+
+    public function membro_cartaos()
     {
         return $this->hasMany(MembroCartao::class, 'it_id_user');
     }
-    public function membroWorkplaces()
+
+    public function membro_workplaces()
     {
         return $this->hasMany(MembroWorkplace::class, 'it_id_user');
     }
-    public function membroQuadroConvitesConvidado()
+
+    public function membro_quadro_convites_convidado()
     {
         return $this->hasMany(MembroQuadroConvite::class, 'it_id_user_convidado');
     }
-    public function membroQuadroConvitesConvidador()
+
+    public function membro_quadro_convites_convidador()
     {
         return $this->hasMany(MembroQuadroConvite::class, 'it_id_user_convidador');
     }
-    public function membroWorkplaceConvitesConvidado()
+
+    public function membro_workplace_convites_convidado()
     {
         return $this->hasMany(MembroWorkplaceConvite::class, 'it_id_user_convidado');
     }
-    public function membroWorkplaceConvitesConvidador()
+
+    public function membro_workplace_convites_convidador()
     {
         return $this->hasMany(MembroWorkplaceConvite::class, 'it_id_user_convidador');
     }

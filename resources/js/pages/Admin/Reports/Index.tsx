@@ -31,28 +31,32 @@ export default function Reports({ tipos_user, workplaces }: Props) {
         data_criacao_ate: '',
     });
 
+    const generatePdfUrl = (routeName: string, data: any) => {
+        const url = new URL(route(routeName));
+        Object.keys(data).forEach(key => {
+            if (data[key] && data[key] !== 'all') {
+                url.searchParams.append(key, data[key]);
+            }
+        });
+        return url.toString();
+    };
+
     const handleUsersSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        usersForm.get(route('admin.reports.users-pdf'), {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        const url = generatePdfUrl('admin.reports.users-pdf', usersForm.data);
+        window.open(url, '_blank');
     };
 
     const handleWorkplacesSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        workplacesForm.get(route('admin.reports.workplaces-pdf'), {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        const url = generatePdfUrl('admin.reports.workplaces-pdf', workplacesForm.data);
+        window.open(url, '_blank');
     };
 
     const handleQuadrosSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        quadrosForm.get(route('admin.reports.quadros-pdf'), {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        const url = generatePdfUrl('admin.reports.quadros-pdf', quadrosForm.data);
+        window.open(url, '_blank');
     };
 
     return (

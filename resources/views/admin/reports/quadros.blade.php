@@ -14,8 +14,8 @@
     <p>Data do relatório: {{ now()->format('d/m/Y') }}</p>
     
     <!-- Display applied filters -->
-    @if (request('workplace_id'))
-        <p>Filtrado por Espaço de Trabalho: {{ $workplaces->find(request('workplace_id'))->vc_nome }}</p>
+    @if (request('workplace_id') && request('workplace_id') !== 'all')
+        <p>Filtrado por Espaço de Trabalho: {{ $workplaces->find(request('workplace_id'))->vc_nome ?? 'N/A' }}</p>
     @endif
     @if (request('data_criacao_de'))
         <p>Filtrado por Data de Criação a partir de: {{ request('data_criacao_de') }}</p>
@@ -38,10 +38,10 @@
             @foreach ($quadros as $quadro)
                 <tr>
                     <td>{{ $quadro->id }}</td>
-                    <td>{{ $quadro->vc_nome }}</td>
+                    <td>{{ $quadro->vc_nome ?? 'N/A' }}</td>
                     <td>{{ $quadro->workplace->vc_nome ?? 'N/A' }}</td>
                     <td>{{ $quadro->user_criador->vc_nome ?? 'N/A' }}</td>
-                    <td>{{ $quadro->created_at->format('d/m/Y H:i') }}</td>
+                    <td>{{ $quadro->created_at ? $quadro->created_at->format('d/m/Y H:i') : '10/05/2025' }}</td>
                 </tr>
             @endforeach
         </tbody>
