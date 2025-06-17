@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MultiSelect } from '@/components/ui/multi-select';
 
 export default function Edit({ item, listas, usuarios, etiquetas }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -121,13 +120,22 @@ export default function Edit({ item, listas, usuarios, etiquetas }) {
                         </div>
                         <div>
                             <Label htmlFor="etiquetas">Etiquetas</Label>
-                            <MultiSelect
-                                options={etiquetas.map((etiqueta) => ({ value: etiqueta.id.toString(), label: etiqueta.vc_nome }))}
-                                selected={data.etiquetas}
-                                onChange={(selected) => setData('etiquetas', selected)}
-                                placeholder="Selecione etiquetas"
-                                className={errors.etiquetas ? 'border-red-500' : ''}
-                            />
+                            <Select
+                                multiple
+                                value={data.etiquetas}
+                                onValueChange={(selected) => setData('etiquetas', selected)}
+                            >
+                                <SelectTrigger id="etiquetas" className={errors.etiquetas ? 'border-red-500' : ''}>
+                                    <SelectValue placeholder="Selecione etiquetas" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {etiquetas.map((etiqueta) => (
+                                        <SelectItem key={etiqueta.id} value={etiqueta.id.toString()}>
+                                            {etiqueta.vc_nome}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                             {errors.etiquetas && <p className="text-sm text-red-500">{errors.etiquetas}</p>}
                         </div>
                         <Button type="submit" disabled={processing}>Atualizar</Button>
