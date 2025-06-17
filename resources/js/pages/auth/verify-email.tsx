@@ -33,7 +33,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
                 </Button>
 
                 <TextLink href={route('logout')} method="post" className="mx-auto block text-sm">
-                    Log out
+                    Sair
                 </TextLink>
             </form>
         </AuthLayout>
