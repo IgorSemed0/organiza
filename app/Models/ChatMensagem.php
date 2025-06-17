@@ -13,6 +13,6 @@ class ChatMensagem extends Model
     protected $fillable = ['it_id_quadro', 'it_id_user_autor', 'vc_texto_mensagem'];
 
     public function quadro() { return $this->belongsTo(Quadro::class, 'it_id_quadro'); }
-                    public function userAutor() { return $this->belongsTo(User::class, 'it_id_user_autor'); }
-                    public function anexos() { return $this->hasMany(ChatAnexo::class, 'it_id_chat_mensagem'); }
+    public function userAutor() { return $this->belongsTo(User::class, 'it_id_user_autor'); }
+    public function anexos() { return $this->hasMany(ChatAnexo::class, 'it_id_chat_mensagem'); }
 }
