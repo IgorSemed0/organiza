@@ -22,15 +22,7 @@ class DashboardController extends Controller
         });
 
         // Workplaces by visibility
-        $workplacesByVisibility = Workplace::selectRaw('vc_visibilidade, COUNT(*) as count')
-            ->groupBy('vc_visibilidade')
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'label' => ucfirst($item->vc_visibilidade),
-                    'count' => $item->count,
-                ];
-            });
+        // $workplacesByVisibility = Workplace::all();
 
         // Quadros by workplace
         $quadrosByWorkplace = Workplace::withCount('quadros')->take(5)->get()->map(function ($workplace) {
@@ -40,9 +32,8 @@ class DashboardController extends Controller
             ];
         });
 
-        return Inertia::render('Admin/Dashboard/Index', [
+        return Inertia::render('dashboard', [
             'usersByType' => $usersByType,
-            'workplacesByVisibility' => $workplacesByVisibility,
             'quadrosByWorkplace' => $quadrosByWorkplace,
         ]);
     }

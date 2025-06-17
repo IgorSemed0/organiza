@@ -18,7 +18,7 @@ interface Props {
     quadrosByWorkplace: ChartData[];
 }
 
-export default function Dashboard({ usersByType, workplacesByVisibility, quadrosByWorkplace }: Props) {
+export default function Dashboard({ usersByType,  quadrosByWorkplace }: Props) {
     const usersBarData = {
         labels: usersByType.map(item => item.label),
         datasets: [{
@@ -28,13 +28,6 @@ export default function Dashboard({ usersByType, workplacesByVisibility, quadros
         }],
     };
 
-    const workplacesPieData = {
-        labels: workplacesByVisibility.map(item => item.label),
-        datasets: [{
-            data: workplacesByVisibility.map(item => item.count),
-            backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)'],
-        }],
-    };
 
     const quadrosBarData = {
         labels: quadrosByWorkplace.map(item => item.label),
@@ -58,14 +51,14 @@ export default function Dashboard({ usersByType, workplacesByVisibility, quadros
                     </CardContent>
                 </Card>
 
-                <Card>
+                {/* <Card>
                     <CardHeader>
                         <CardTitle>Workplaces by Visibility</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <Pie data={workplacesPieData} options={{ responsive: true, plugins: { legend: { position: 'top' } } }} />
                     </CardContent>
-                </Card>
+                </Card> */}
 
                 <Card>
                     <CardHeader>
